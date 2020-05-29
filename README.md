@@ -15,7 +15,7 @@
 - python-telegram-bot
 
 ### STRUCTURE
-|**FILE**					| DESRIPTION															 |
+|**FILE**					| DESCRIPTION															 |
 |---------------------------|------------------------------------------------------------------------|
 |main.py               		|* (entry point) Settings all handlers/controllers, etc (current file)	*|
 |base_functions.py    		|* Base functions, reading config.ini. (function wrappers, values.json)	*|
