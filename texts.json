@@ -1,0 +1,15 @@
+{
+	"ru": {
+		"texts": {
+			"welcome": "hello",
+			"to_main": "main screen",
+			"btn_txt": "btn text",
+			"info_c": "info command"
+		},
+		"keyboards": {
+			"main": [
+				["button"]
+			]
+		}
+	}
+}

@@ -1,0 +1,5 @@
+json
+configparser
+logging
+sqlite3
+python-telegram-bot
