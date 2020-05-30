@@ -13,7 +13,7 @@ STRUCTURE:
     - handlers.py           ~ Custom handlers for custom menus, commands, navigation
 
     - database.db           ~ SQLite database for dev process (Postgresql on production)
-    - config.ini            ~ All projects configs, api keys, tokens, etc
+    - config.json            ~ All projects configs, api keys, tokens, etc
     - values.json           ~ All bot's texts and keyboards, for different languages
 
 Developer: Alexander Machek [@youbrain]

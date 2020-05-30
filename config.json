@@ -1,0 +1,5 @@
+{
+	"bot_token": "1011862852:AAGlp300gZSq0WCfCegzhjAyuu0Q-XsBh14",
+	"db_file":  "database.db",
+	"texts_file":  "values.json"
+}
