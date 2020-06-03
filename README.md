@@ -11,7 +11,7 @@
 - json
 - configparser
 - logging
-- sqlite3
+- peewee
 - python-telegram-bot
 
 ### STRUCTURE
@@ -20,7 +20,7 @@
 |main.py               		|* (entry point) Settings all handlers/controllers, etc (current file)	*|
 |base_functions.py    		|* Base functions, reading config.ini. (function wrappers, values.json)	*|
 |base_handlers.py      		|* Base bot's functionality (/start, /info handlers)					*|
-|database.py           		|* Class for communication with database.db 							*|
+|database.py           		|* peewee classes for communication with database						*|
 |functions.py          		|* Custom function for specific bot (scrapers, api wrappers, etc)		*|
 |handlers.py           		|* Custom handlers for custom menus, commands, navigation				*|
 |database.db           		|* SQLite database for dev process (Postgresql on production)			*|

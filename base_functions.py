@@ -11,5 +11,5 @@ with open(config['texts_file']) as file:
     texts = jso['ru']['texts']
     keyboards = jso['ru']['keyboards']
 
-from database import db
+from database import *
 from functions import *

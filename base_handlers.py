@@ -3,7 +3,7 @@
 from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove, InlineKeyboardButton, InlineKeyboardMarkup)
 
 from base_functions import *
-from database import db
+from database import *
 
 from functions import *
 from handlers import *
@@ -20,12 +20,13 @@ def info(update, context):
 
 
 def start(update, context):
-    out = db.select(f"SELECT * FROM users WHERE chat_id={update.message.chat.id}")
+    out = User.select().where(User.chat_id == update.message.chat.id)
 
     if not out:
-        db.insert_many("INSERT INTO users (chat_id, first_name, username, last_name) VALUES (?, ?, ?, ?)",
-                       ((update.message.chat.id, update.message.chat.first_name,
-                         update.message.chat.username, update.message.chat.last_name)))
+        User.create(chat_id=update.message.chat.id,
+                    first_name=update.message.chat.first_name,
+                    last_name=update.message.chat.last_name,
+                    username=update.message.chat.username).save()
         update.message.reply_text(texts['welcome'])
     else:
         to_main(update, context)

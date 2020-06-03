@@ -4,7 +4,7 @@ from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove, InlineKeyboardBu
 
 from base_functions import *
 from base_handlers import *
-from database import db
+from database import *
 
 from functions import *
 from handlers import *

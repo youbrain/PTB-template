@@ -8,7 +8,7 @@ STRUCTURE:
     - base_functions.py     ~ Base functions, reading config.ini. (function wrappers, values.json)
     - base_handlers.py      ~ Base bot's functionality (/start, /info handlers)
 
-    - database.py           ~ Class for communication with database.db 
+    - database.py           ~ peewee classes for communication with database.db 
     - functions.py          ~ Custom function for specific bot (scrapers, api wrappers, etc)
     - handlers.py           ~ Custom handlers for custom menus, commands, navigation
 
@@ -27,7 +27,7 @@ from telegram.ext import (Updater, Filters)
 from telegram.ext import (CommandHandler, MessageHandler, ConversationHandler, CallbackQueryHandler)
 
 from base_functions import *
-from database import db
+from database import *
 from base_handlers import *
 
 from functions import *

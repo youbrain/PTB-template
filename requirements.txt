@@ -1,5 +1,5 @@
 json
 configparser
 logging
-sqlite3
+peewee
 python-telegram-bot
