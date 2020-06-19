@@ -1,5 +1,4 @@
 json
-configparser
 logging
 peewee
 python-telegram-bot

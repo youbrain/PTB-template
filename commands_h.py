@@ -2,21 +2,17 @@
 # -*- coding: utf-8 -*-
 from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove, InlineKeyboardButton, InlineKeyboardMarkup)
 
-from base_functions import *
-from database import *
+from base import (config, texts, keyboards, logger)
+from database import User
 
-from functions import *
-from handlers import *
+from base_h import to_main
 
-
-''' Base bot's functionality (/start, /info handlers) here '''
-
-
-''' COMMANDS HANDLERS '''
+'''Defult commands handlers (/start, /info) (adding other commands here too)'''
 
 
 def info(update, context):
-    update.message.reply_text(texts['info_c'])
+    bug_report_btn = InlineKeyboardButton(keyboards['bug_rep']['to'], callback_data='bug_report')
+    update.message.reply_text(texts['info_c'], reply_markup=InlineKeyboardMarkup(((bug_report_btn, ), )))
 
 
 def start(update, context):
@@ -30,10 +26,3 @@ def start(update, context):
         update.message.reply_text(texts['welcome'])
     else:
         to_main(update, context)
-
-
-def to_main(update, context):
-    '''EXITING FROM ALL HANDLERS. TO BOT'S MAIN MENU'''
-    update.message.reply_text(texts['to_main'],
-                              reply_markup=ReplyKeyboardMarkup(keyboards['main'], resize_keyboard=True))
-    return -1

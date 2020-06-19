@@ -3,10 +3,39 @@
 		"texts": {
 			"welcome": "hello",
 			"to_main": "main screen",
-			"btn_txt": "btn text",
-			"info_c": "info command"
-		},
+			"info_c": "info command",
+            "user_info": "<b>Name:</b> <n>\n<b>Last name:</b> <l>\n<b>Username:</b> @<u>\nStart: <s>",
+            "username_not_set": "❌",
+            "bug_report": {
+                "oper_new": "<b>new bug report:</b> ",
+                "prefix": "Report content:\n",
+                "txt": "you can send bug report msg here",
+                "u_can_otrher": "you can send sth other too",
+                "postfix": "Sth else?",
+                "thnx": "thank you for report"
+            },
+            "parts_names": [
+                "Photo: ",
+                "File: ", 
+                "text: ",
+                "video: ",
+                "ask",
+                "audio: ",
+                "sticker: ",
+                "contact: ",
+                "location",
+                "audio msg",
+                "vide msg"
+            ],
+            "btn_txt": "btn text"
+        },
 		"keyboards": {
+            "bug_rep": {
+                "del_part": "❌ №<n>",
+                "to": "I found bug!",
+                "cancel": "cancel",
+                "send": "send"
+            },
 			"main": [
 				["button"]
 			]

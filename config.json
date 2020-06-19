@@ -1,5 +1,6 @@
 {
-	"bot_token": "1011862852:AAGlp300gZSq0WCfCegzhjAyuu0Q-XsBh14",
+	"bot_token": "1011862852:AAH1UzqTbIlCS025zQ8_Hwlgjl79wmRt6XI",
 	"db_file":  "database.db",
-	"texts_file":  "values.json"
+	"texts_file":  "values.json",
+    "preview_chars": 50
 }
