@@ -14,6 +14,16 @@
                 "postfix": "Sth else?",
                 "thnx": "thank you for report"
             },
+            "dashboard": {
+                "dashboard_main": "you in dashboard now",
+                "no_access": "you have no access to the dash board",
+                "statistics": {
+                    "txt": "all users count: <a_c>"
+                }
+            },
+            "settings": {
+                "txt": "in settings now..."
+            },
             "parts_names": [
                 "Photo: ",
                 "File: ", 
@@ -30,6 +40,21 @@
             "btn_txt": "btn text"
         },
 		"keyboards": {
+            "settings": {
+                "back": "back",
+                "headlines": {
+                    "stickers": "stickers: "
+                },
+                "status": ["👍", "❌"]
+            },
+            "dashboard": {
+                "statistics": [
+                    [["back"]]
+                ],
+                "menu": [
+                    ["statistics"]
+                ]
+            },
             "bug_rep": {
                 "del_part": "❌ №<n>",
                 "to": "I found bug!",
@@ -37,7 +62,7 @@
                 "send": "send"
             },
 			"main": [
-				["button"]
+				["settings"]
 			]
 		}
 	}

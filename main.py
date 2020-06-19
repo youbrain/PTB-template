@@ -29,12 +29,14 @@ from telegram.ext import (Updater, Filters, Defaults)
 from telegram.ext import (CommandHandler, MessageHandler, ConversationHandler, CallbackQueryHandler)
 
 from base import *
-from base_h import (to_main, to_main_with_msg_del)
+from base_h import (to_main, to_dashboard, to_main_with_msg_del)
 
 from commands_h import (info, start)
+from dashboard_h import statistics
+from settings_h import (settings, set_sth)
 from bug_report_h import (bug_report, bugrep_text, report_other, rem_part_report, send_report)
 
-from test_handlers import (button)
+from test_handlers import button
 
 
 def main():
@@ -57,11 +59,32 @@ def main():
         fallbacks=[],
         per_message=False
     )
+
+    dash_h = ConversationHandler( # DASHBOARD 
+        entry_points=[CommandHandler("dashboard", to_dashboard)],
+        states={
+            DASH_MAIN:   [MessageHandler(Filters.regex(f"^({keyboards['dashboard']['menu'][0][0]})$"), statistics)], # statistics btn
+
+            DASH_STAT:   [MessageHandler(Filters.regex(f"^({keyboards['dashboard']['statistics'][0][0][0]})$"), to_dashboard)] # back
+        },
+        fallbacks=[],
+        per_message=False
+    )
+
+    settings_h = ConversationHandler( # SETTINGS
+        entry_points=[MessageHandler(Filters.regex(f"^({keyboards['main'][0][0]})$"), settings)],
+        states={
+            SETTINGS_MAIN: [CallbackQueryHandler(to_main_with_msg_del, pattern="to_main"),
+                            CallbackQueryHandler(set_sth, pattern="set_"),]
+        },
+        fallbacks=[],
+        per_message=False
+    )
+
+    # Cconversations
+    dp.add_handler(dash_h)
     dp.add_handler(bug_report_h)
-
-    # main menu btn
-    dp.add_handler(MessageHandler(Filters.regex(f"^({keyboards['main'][0][0]})$"), button))
-
+    dp.add_handler(settings_h)
     # commands
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("info", info))

@@ -2,5 +2,6 @@
 	"bot_token": "1011862852:AAH1UzqTbIlCS025zQ8_Hwlgjl79wmRt6XI",
 	"db_file":  "database.db",
 	"texts_file":  "values.json",
-    "preview_chars": 50
+    "preview_chars": 50,
+    "show_no_access_warning": true
 }

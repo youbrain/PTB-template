@@ -25,3 +25,9 @@ def error(update, context):
 ''' STATES '''
 # bug report
 SEND_BUGREP_TXT, SEND_BUGREP_OTHER = range(2)
+
+# dashboard
+DASH_MAIN, DASH_STAT = range(2)
+
+# settings
+SETTINGS_MAIN = range(1)
