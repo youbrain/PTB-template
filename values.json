@@ -18,7 +18,7 @@
                 "dashboard_main": "you in dashboard now",
                 "no_access": "you have no access to the dash board",
                 "statistics": {
-                    "txt": "all users count: <a_c>"
+                    "txt": "all users count: <a_c>\nactive users today: <m_d>\nmidle msg to bot count per day: <dd>"
                 }
             },
             "settings": {

@@ -21,7 +21,10 @@ class User(peewee.Model):
 
     is_oper = peewee.BooleanField(default=False)
     is_admin = peewee.BooleanField(default=False)
+    is_interview = peewee.BooleanField(default=False)
     use_stickers = peewee.BooleanField(default=False)
+
+    password = peewee.IntegerField()
     notify_time = peewee.TimeField(default=datetime.now().time())
 
     class Meta:
@@ -34,13 +37,13 @@ class Dayly_statistic(peewee.Model):
 
     chat_id = peewee.IntegerField()
 
-    day = peewee.DateField(default=datetime.date)
-    msgs_count = peewee.IntegerField()
-    last_msg_time = peewee.TimeField()
+    day = peewee.DateField(default=datetime.now().date())
+    msgs_count = peewee.IntegerField(default=0)
+    last_msg_time = peewee.TimeField(default=datetime.now().time())
 
     def save(self, *args, **kwargs):
         self.last_msg_time = datetime.now().time()
-        return super(Something, self).save(*args, **kwargs)
+        return super(Dayly_statistic, self).save(*args, **kwargs)
 
     class Meta:
         database = db

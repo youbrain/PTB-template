@@ -4,7 +4,7 @@ from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove, InlineKeyboardBu
 from datetime import datetime
 
 from functions import (remove_keyboard, get_n_column_keyb)
-from base_h import to_main
+from base_h import to_main, new_update
 from database import User
 from base import *
 
@@ -28,6 +28,8 @@ def get_settings_keyb(user):
 	keyb = [[s], [n]]
 	return keyb
 
+
+@new_update
 def settings(update, context):
 	user = User.get(User.chat_id == update._effective_chat.id)
 
@@ -40,6 +42,7 @@ def settings(update, context):
 	return SETTINGS_MAIN
 
 
+@new_update
 def set_sth(update, context):
 	data = update.callback_query.data.split('_')
 	if data[1] == 'stickers':

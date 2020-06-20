@@ -3,5 +3,6 @@
 	"db_file":  "database.db",
 	"texts_file":  "values.json",
     "preview_chars": 50,
-    "show_no_access_warning": true
+    "show_no_access_warning": true,
+    "blitz_throughout": 1
 }

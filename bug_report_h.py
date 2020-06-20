@@ -3,12 +3,13 @@
 from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove, InlineKeyboardButton, InlineKeyboardMarkup)
 
 from functions import (get_data, publication_preview, get_n_column_keyb, send_draft, get_user_info, remove_keyboard)
-from base_h import to_main
+from base_h import to_main, new_update
 from database import User
 from base import *
 '''SEND REPORT SCREEN'''
 
 
+@new_update
 def bug_report(update, context):
     # cancle report btn
     keyb = InlineKeyboardMarkup([[InlineKeyboardButton(keyboards['bug_rep']['cancel'], callback_data='bug_rep_cancel')]])
@@ -19,6 +20,7 @@ def bug_report(update, context):
     return SEND_BUGREP_TXT
 
 
+@new_update
 def bugrep_text(update, context):
     # creating places to temporary save report parts 
     context.user_data['drafts'] = {'bug_rep': {'main_text': update.message.text}}
@@ -43,6 +45,7 @@ def bugrep_text(update, context):
     return SEND_BUGREP_OTHER
 
 
+@new_update
 def report_other(update, context):
     # parsing update for different content types & saving into user_data
     get_data(update, context, 'bug_rep', text=True, photo=True, voice=True)
@@ -74,6 +77,7 @@ def report_other(update, context):
     context.user_data['drafts']['bug_rep']['last_msg_id'] = m_id
 
 
+@new_update
 def rem_part_report(update, context):
     data = update.callback_query.data.split('_')
     # delating report part from user_data
@@ -103,6 +107,7 @@ def rem_part_report(update, context):
     update.callback_query.edit_message_text(txt, reply_markup=InlineKeyboardMarkup(keyb))
 
 
+@new_update
 def send_report(update, context):
     # selecting all recipients
     opers = User.select().where(User.is_oper)
