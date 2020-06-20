@@ -22,7 +22,11 @@
                 }
             },
             "settings": {
-                "txt": "in settings now..."
+                "txt": "in settings now...",
+                "set_notify_hour": "chose hour for notificatons",
+                "set_notify_min": "chose minute",
+                "hour": "🕰",
+                "minute": "⏱"
             },
             "parts_names": [
                 "Photo: ",
@@ -43,7 +47,8 @@
             "settings": {
                 "back": "back",
                 "headlines": {
-                    "stickers": "stickers: "
+                    "stickers": "stickers: ",
+                    "notify": "notificaton: "
                 },
                 "status": ["👍", "❌"]
             },

@@ -17,11 +17,12 @@ class User(peewee.Model):
     last_name = peewee.CharField(null=True)
     username = peewee.CharField(null=True, unique=True)
 
-    start_time = peewee.DateTimeField(default=datetime.now)
+    start_time = peewee.DateTimeField(default=datetime.now())
 
     is_oper = peewee.BooleanField(default=False)
     is_admin = peewee.BooleanField(default=False)
     use_stickers = peewee.BooleanField(default=False)
+    notify_time = peewee.TimeField(default=datetime.now().time())
 
     class Meta:
         database = db
@@ -38,7 +39,7 @@ class Dayly_statistic(peewee.Model):
     last_msg_time = peewee.TimeField()
 
     def save(self, *args, **kwargs):
-        self.last_msg_time = datetime.time
+        self.last_msg_time = datetime.now().time()
         return super(Something, self).save(*args, **kwargs)
 
     class Meta:
