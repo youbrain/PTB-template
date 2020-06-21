@@ -21,10 +21,12 @@ class User(peewee.Model):
 
     is_oper = peewee.BooleanField(default=False)
     is_admin = peewee.BooleanField(default=False)
-    is_interview = peewee.BooleanField(default=False)
+    is_interviewed = peewee.BooleanField(default=False)
     use_stickers = peewee.BooleanField(default=False)
 
-    password = peewee.IntegerField()
+    lock_time = peewee.IntegerField(default=5)
+    password = peewee.CharField(null=True)
+
     notify_time = peewee.TimeField(default=datetime.now().time())
 
     class Meta:
@@ -50,5 +52,5 @@ class Dayly_statistic(peewee.Model):
         db_table = 'dayly_statistic'
 
 
-Dayly_statistic.create_table()
 User.create_table()
+Dayly_statistic.create_table()

@@ -29,11 +29,11 @@ from telegram.ext import (Updater, Filters, Defaults)
 from telegram.ext import (CommandHandler, MessageHandler, ConversationHandler, CallbackQueryHandler)
 
 from base import *
-from base_h import (to_main, to_dashboard, to_main_with_msg_del)
+from base_h import (to_main, to_dashboard, to_main_with_msg_del, check_other_text)
 
 from commands_h import (info, start)
 from dashboard_h import statistics
-from settings_h import (settings, set_sth)
+from settings_h import (settings, set_sth, pswd_set, edit_pswd)
 from bug_report_h import (bug_report, bugrep_text, report_other, rem_part_report, send_report)
 
 from test_handlers import button
@@ -75,20 +75,23 @@ def main():
         entry_points=[MessageHandler(Filters.regex(f"^({keyboards['main'][0][0]})$"), settings)],
         states={
             SETTINGS_MAIN: [CallbackQueryHandler(to_main_with_msg_del, pattern="to_main"),
-                            CallbackQueryHandler(set_sth, pattern="set_"),]
+                            CallbackQueryHandler(set_sth, pattern="set_"),
+                            CallbackQueryHandler(pswd_set, pattern="password_set")],
+            SET_PSWD:      [MessageHandler(Filters.text, edit_pswd)]
         },
         fallbacks=[],
         per_message=False
     )
 
-    # Cconversations
-    dp.add_handler(dash_h)
-    dp.add_handler(bug_report_h)
-    dp.add_handler(settings_h)
     # commands
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("info", info))
 
+    # Cconversations
+    dp.add_handler(dash_h)
+    dp.add_handler(bug_report_h)
+    dp.add_handler(settings_h)
+    dp.add_handler(MessageHandler(Filters.text, check_other_text))
     # errors
     # dp.add_error_handler(error)
 

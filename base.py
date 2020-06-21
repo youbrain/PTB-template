@@ -30,4 +30,7 @@ SEND_BUGREP_TXT, SEND_BUGREP_OTHER = range(2)
 DASH_MAIN, DASH_STAT = range(2)
 
 # settings
-SETTINGS_MAIN = range(1)
+SETTINGS_MAIN, SET_PSWD = range(2)
+
+# lock
+LOCK_PSWD = range(1)
