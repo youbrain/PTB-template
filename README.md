@@ -1,5 +1,7 @@
 ## Default template for telegram bot *(python-telegram-bot)*
 
+[![CodeFactor](https://www.codefactor.io/repository/github/youbrain/ptb_bot_template/badge)](https://www.codefactor.io/repository/github/youbrain/ptb_bot_template)
+
 **Developer**: Alexander Machek, [youbrain](t.me/youbrain)
 
 ### REQUIREMENTS
