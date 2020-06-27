@@ -1,6 +1,8 @@
 ## Default template for telegram bot *(python-telegram-bot)*
 
-**Developer**: Alexander Machek, [youbrain](t.me/youbrain)
+[![dev](https://img.shields.io/badge/Developer-Alexander%20Macheck-yellow)](https://t.me/youbrain)
+
+[![CodeFactor](https://www.codefactor.io/repository/github/youbrain/ptb_bot_template/badge)](https://www.codefactor.io/repository/github/youbrain/ptb_bot_template)
 
 ### REQUIREMENTS
 `pip install -r requirements.txt`
