@@ -33,7 +33,7 @@ from base_h import (to_main, to_dashboard, to_main_with_msg_del, check_other_tex
 
 from commands_h import (info, start, access)
 from dashboard_h import statistics
-from settings_h import (settings, set_sth, pswd_set, edit_pswd)
+from settings_h import (settings, set_sth, pswd_set, edit_pswd, set_lockation_txt, set_locatipn_geo, set_coords)
 from bug_report_h import (bug_report, bugrep_text, report_other, rem_part_report, send_report)
 
 from test_handlers import button
@@ -77,7 +77,10 @@ def main():
             SETTINGS_MAIN: [CallbackQueryHandler(to_main_with_msg_del, pattern="to_main"),
                             CallbackQueryHandler(set_sth, pattern="set_"),
                             CallbackQueryHandler(pswd_set, pattern="password_set")],
-            SET_PSWD:      [MessageHandler(Filters.text, edit_pswd)]
+            SET_PSWD:      [MessageHandler(Filters.text, edit_pswd)],
+            SET_LOCATION:  [MessageHandler(Filters.text, set_lockation_txt),
+                            MessageHandler(Filters.location, set_locatipn_geo),
+                            CallbackQueryHandler(set_coords, pattern="set_coords_")]
         },
         fallbacks=[],
         per_message=False

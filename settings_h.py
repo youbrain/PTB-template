@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove, InlineKeyboardButton, InlineKeyboardMarkup)
+from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton)
+from telegram.error import BadRequest
+from geopy.geocoders import Nominatim
 from datetime import datetime
+from geocoder import geonames
 
 from functions import (remove_keyboard, get_n_column_keyb)
 from base_h import to_main, new_update
 from database import User
 from base import *
-
 ''' settings '''
 
 
@@ -19,13 +21,26 @@ def get_settings_keyb(user):
 	
 	n = InlineKeyboardButton(keyboards['settings']['headlines']['notify']+str(user.notify_time)[:5], callback_data='set_notify')
 
-	t_p = None
 	if user.password:
 		p = InlineKeyboardButton(keyboards['settings']['headlines']['change_password'], callback_data='password_set')
 		t_p = InlineKeyboardButton(keyboards['settings']['headlines']['lock_time'].replace('<t>', str(user.lock_time)), callback_data='set_locktime')
 	else:
 		p = InlineKeyboardButton(keyboards['settings']['headlines']['set_password'], callback_data='password_set')
+		t_p = None
 
+	if user.coordinates:
+		geolocator = Nominatim(user_agent="bot")
+		address = geolocator.reverse(user.coordinates, language='en').raw['address']
+
+		if address.get('village'):
+			address['city'] = address['village']
+		elif address.get('town'):
+			address['city'] = address['town']
+		print(address)
+		b = f"{address['city']}, {address['country']}"
+		c = InlineKeyboardButton(keyboards['settings']['headlines']['location']+b, callback_data='set_location')# .address
+	else:
+		c = InlineKeyboardButton(keyboards['settings']['headlines']['location_set'], callback_data='set_location')
 	'''
 	if user.:
 		s = texts['settings'][''][0]
@@ -33,9 +48,9 @@ def get_settings_keyb(user):
 		s = texts['settings'][''][1]
 	'''
 	if t_p:
-		keyb = [[s], [n], [p], [t_p]]
+		keyb = [[s], [n], [p], [t_p], [c]]
 	else:
-		keyb = [[s], [n], [p]]
+		keyb = [[s], [n], [p], [c]]
 
 	return keyb
 
@@ -48,7 +63,7 @@ def settings(update, context):
 	keyb.append([InlineKeyboardButton(keyboards['settings']['back'], callback_data='to_main')])
 
 	remove_keyboard(update, context)
-	update.message.reply_text(texts['settings']['txt'], reply_markup=InlineKeyboardMarkup(keyb))
+	context.user_data['m_id'] = update.message.reply_text(texts['settings']['txt'], reply_markup=InlineKeyboardMarkup(keyb)).message_id
 	return SETTINGS_MAIN
 
 
@@ -122,6 +137,16 @@ def set_sth(update, context):
 
 			update.callback_query.edit_message_text(txt, reply_markup=InlineKeyboardMarkup(keyb))
 
+	# setting location
+	elif data[1] == 'location':
+		btn = ReplyKeyboardMarkup([[KeyboardButton(keyboards['settings']['send_location'], request_location=True)]], resize_keyboard=True)
+
+		context.bot.delete_message(chat_id=update._effective_chat.id, message_id=context.user_data['m_id'])
+
+		context.user_data['m_id'] = context.bot.send_message(update._effective_chat.id, texts['settings']['location'], reply_markup=btn).message_id
+		return SET_LOCATION
+
+
 @new_update
 def pswd_set(update, context):
 	idi = update.callback_query.edit_message_text(texts['settings']['set_pswd']).message_id
@@ -154,3 +179,54 @@ def edit_pswd(update, context):
 	else:
 		idi = update.message.reply_text(texts['settings']['pswd_no_min_lenght']).message_id
 		context.user_data['m_id'] = idi
+
+
+def set_lockation_txt(update, context):
+	try:
+		context.bot.delete_message(chat_id=update._effective_chat.id, message_id=context.user_data['m_id'])
+	except BadRequest:
+		pass
+
+	all_l = geonames(update.message.text,  maxRows=config['maxRows_location'], key=config['key_location'])
+	btns = []
+
+	for l in all_l:
+		btns.append([InlineKeyboardButton(f"{l.address}, {l.country}", callback_data=f"set_coords_{l.lat}_{l.lng}")])
+	if all_l:
+		update.message.reply_text(texts['settings']['locations'], reply_markup=InlineKeyboardMarkup(btns))
+	else:
+		update.message.reply_text(texts['settings']['other_loc'])
+
+
+def set_locatipn_geo(update, context):
+	user = User.get(User.chat_id == update._effective_chat.id)
+	user.coordinates = f"{update.message.location['latitude']}, {update.message.location['longitude']}"
+	user.save()
+
+
+	keyb = get_settings_keyb(user)
+	keyb.append([InlineKeyboardButton(keyboards['settings']['back'], callback_data='to_main')])
+	txt = texts['settings']['txt']
+
+	context.bot.delete_message(chat_id=update._effective_chat.id, message_id=update.message.message_id)
+	context.bot.delete_message(chat_id=update._effective_chat.id, message_id=context.user_data['m_id'])
+	remove_keyboard(update, context)
+	update.message.reply_text(txt, reply_markup=InlineKeyboardMarkup(keyb))
+
+
+def set_coords(update, context):
+	data = update.callback_query.data.split('_')
+
+	user = User.get(User.chat_id == update._effective_chat.id)
+	user.coordinates = f"{data[2]}, {data[3]}"
+	user.save()
+
+
+	keyb = get_settings_keyb(user)
+	keyb.append([InlineKeyboardButton(keyboards['settings']['back'], callback_data='to_main')])
+	txt = texts['settings']['txt']
+
+	# context.bot.delete_message(chat_id=update._effective_chat.id, message_id=update.message.message_id)
+	# context.bot.delete_message(chat_id=update._effective_chat.id, message_id=context.user_data['m_id'])
+	update.callback_query.edit_message_text(txt, reply_markup=InlineKeyboardMarkup(keyb))
+

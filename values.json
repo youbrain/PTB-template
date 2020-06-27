@@ -34,6 +34,8 @@
                 }
             },
             "settings": {
+                "locations": "chose one from the list below",
+                "other_loc": "nothing found, try again",
                 "txt": "in settings now...",
                 "set_notify_hour": "chose hour for notificatons",
                 "set_notify_min": "chose minute",
@@ -44,7 +46,8 @@
                 "set_pswd": "send bot's password (no spaces, min lenght 4 cahrs)",
                 "pswd_no_min_lenght": "no min lenght",
                 "pswd_no_spaces": "password cant contain spaces",
-                "pswd_set": "password set"
+                "pswd_set": "password set",
+                "location": "you can send location by btn or send a city name"
             },
             "parts_names": [
                 "Photo: ",
@@ -74,11 +77,14 @@
             },
             "settings": {
                 "back": "back",
+                "send_location": "send location",
                 "headlines": {
                     "stickers": "stickers: ",
                     "notify": "notificaton: ",
                     "change_password": "change password",
                     "set_password": "set password",
+                    "location": "now: ",
+                    "location_set": "set location",
                     "lock_time": "lock time: <t> min"
                 },
                 "status": ["👍", "❌"]
