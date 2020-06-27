@@ -31,7 +31,7 @@ from telegram.ext import (CommandHandler, MessageHandler, ConversationHandler, C
 from base import *
 from base_h import (to_main, to_dashboard, to_main_with_msg_del, check_other_text)
 
-from commands_h import (info, start)
+from commands_h import (info, start, access)
 from dashboard_h import statistics
 from settings_h import (settings, set_sth, pswd_set, edit_pswd)
 from bug_report_h import (bug_report, bugrep_text, report_other, rem_part_report, send_report)
@@ -91,6 +91,8 @@ def main():
     dp.add_handler(dash_h)
     dp.add_handler(bug_report_h)
     dp.add_handler(settings_h)
+
+    dp.add_handler(CallbackQueryHandler(access, pattern="access_"))
     dp.add_handler(MessageHandler(Filters.text, check_other_text))
     # errors
     # dp.add_error_handler(error)

@@ -5,10 +5,9 @@
     "preview_chars": 50,
     "show_no_access_warning": true,
     "blitz_throughout": 1,
-    "locktime": ["5", "10", "15", "30", "45", "60"],
     "notify_time_set_columns": 4,
     "locktime_set_columns": 3,
     "min_pswd_lenght": 4,
-    "notify_mins": ["00", "05", "10", "15", "30", "45", "50", "55"],
-    "notify_hours": ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"]
+    "user_info_btns_per_line": 2,
+    "owner_id": "383253401"
 }

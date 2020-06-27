@@ -44,7 +44,8 @@ def get_settings_keyb(user):
 def settings(update, context):
 	user = User.get(User.chat_id == update._effective_chat.id)
 
-	keyb = get_settings_keyb(user).append([InlineKeyboardButton(keyboards['settings']['back'], callback_data='to_main')])
+	keyb = get_settings_keyb(user)
+	keyb.append([InlineKeyboardButton(keyboards['settings']['back'], callback_data='to_main')])
 
 	remove_keyboard(update, context)
 	update.message.reply_text(texts['settings']['txt'], reply_markup=InlineKeyboardMarkup(keyb))
@@ -74,7 +75,7 @@ def set_sth(update, context):
 
 	# notify time
 	elif data[1] == 'notify' and len(data) == 2:
-		hours = config['notify_hours']
+		hours = texts['notify_hours']
 		data = [[f"{texts['settings']['hour']}{num}", f"set_notify_hour_{num}"] for num in hours]
 		keyb = get_n_column_keyb(data, config['notify_time_set_columns'])
 		update.callback_query.edit_message_text(texts['settings']['set_notify_hour'], reply_markup=InlineKeyboardMarkup(keyb))
@@ -83,7 +84,7 @@ def set_sth(update, context):
 	elif data[1] == 'notify':
 		if data[2] == 'hour':
 			d = []
-			mins = config['notify_mins']
+			mins = texts['notify_mins']
 			for m in mins:
 				time = data[3]+':'+m
 				d.append((texts['settings']['minute']+time, 'set_notify_'+time))
@@ -105,7 +106,7 @@ def set_sth(update, context):
 	# locktime change
 	elif data[1] == 'locktime':
 		if len(data) == 2:
-			mins = config['locktime']
+			mins = texts['locktime']
 			d = [[texts['settings']['locktime_mins']+a, 'set_locktime_'+a] for a in mins]
 			keyb = get_n_column_keyb(d, config['locktime_set_columns'])
 
@@ -142,7 +143,8 @@ def edit_pswd(update, context):
 			user.password = m
 			user.save()
 
-			keyb = get_settings_keyb(user).append([InlineKeyboardButton(keyboards['settings']['back'], callback_data='to_main')])
+			keyb = get_settings_keyb(user)
+			keyb.append([InlineKeyboardButton(keyboards['settings']['back'], callback_data='to_main')])
 
 			update.message.reply_text(texts['settings']['txt'], reply_markup=InlineKeyboardMarkup(keyb))
 			return SETTINGS_MAIN

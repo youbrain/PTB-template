@@ -16,6 +16,8 @@ def get_n_column_keyb(data, n):
         return [btns]
 
     for d in data:
+        if not d:
+            continue
         if len(flag) + 1 < n:
             flag.append(InlineKeyboardButton(d[0], callback_data=d[1]))
         else:

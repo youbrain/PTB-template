@@ -12,11 +12,11 @@ from database import User, Dayly_statistic
 
 def new_update(func):    
     def wrapper(*args, **kwargs):
-        now = Dayly_statistic.select().where(Dayly_statistic.day == datetime.now().date())
+        now = Dayly_statistic.select().where((Dayly_statistic.day == datetime.now().date()) & (Dayly_statistic.chat_id == args[0]._effective_chat.id))
         user = User.get(User.chat_id == args[0]._effective_chat.id)
 
         # is bot locked
-        if is_locked(user, now):
+        if is_locked(user, now) and user.password:
             return lock_screen(args[0], args[1])
 
         # editing msg today count & last msg time
@@ -30,10 +30,10 @@ def new_update(func):
         back_5 = datetime.now() - timedelta(days=config['blitz_throughout'])
         c = Dayly_statistic.select().where(Dayly_statistic.day >= back_5).count()
 
-        # if c == config['blitz_throughout'] and not user.is_interviewed:
-        #     user.is_interview = True
-        #     user.save()
-        #     return blitz(args[0], args[1])
+        if c == config['blitz_throughout'] and not user.is_interviewed:
+            user.is_interview = True
+            user.save()
+            # return blitz(args[0], args[1])
 
 
         return_value = func(*args, **kwargs)
@@ -81,6 +81,8 @@ def lock_screen(update, context):
 
 
 def is_locked(user, now):
+    if not now:
+        return 0
     deff = datetime.now() - timedelta(minutes=user.lock_time)
     if now[0].last_msg_time <= deff.time():
         return True
@@ -92,7 +94,7 @@ def check_other_text(update, context):
     user = User.get(User.chat_id == update._effective_chat.id)
     now = Dayly_statistic.select().where(Dayly_statistic.day == datetime.now().date())
 
-    if is_locked(user, now):
+    if is_locked(user, now) and user.password:
         # if password correct
         if user.password == update.message.text:
             now = Dayly_statistic.select().where(Dayly_statistic.day == datetime.now().date())

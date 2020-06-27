@@ -21,6 +21,9 @@ class User(peewee.Model):
 
     is_oper = peewee.BooleanField(default=False)
     is_admin = peewee.BooleanField(default=False)
+    is_banned = peewee.BooleanField(default=False)
+    is_owner = peewee.BooleanField(default=False)
+
     is_interviewed = peewee.BooleanField(default=False)
     use_stickers = peewee.BooleanField(default=False)
 

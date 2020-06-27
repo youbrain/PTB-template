@@ -6,4 +6,5 @@ from base import *
 
 
 def blitz(update, context):
+	# update.message.reply_text(texts[''])
 	pass
