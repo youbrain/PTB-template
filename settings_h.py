@@ -9,7 +9,7 @@ from geocoder import geonames
 from functions import (remove_keyboard, get_n_column_keyb)
 from base_h import to_main, new_update
 from database import User
-from base import *
+from base import (SETTINGS_MAIN, SET_PSWD, SET_LOCATION, texts, keyboards)
 ''' settings '''
 
 

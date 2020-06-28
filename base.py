@@ -34,3 +34,6 @@ SETTINGS_MAIN, SET_PSWD, SET_LOCATION = range(3)
 
 # lock
 LOCK_PSWD = range(1)
+
+# interview
+INTERVIEW, INTERVIEW_MORE = range(2)

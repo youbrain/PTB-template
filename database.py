@@ -40,7 +40,6 @@ class User(peewee.Model):
 
 class Dayly_statistic(peewee.Model):
     id = peewee.AutoField()
-
     chat_id = peewee.IntegerField()
 
     day = peewee.DateField(default=datetime.now().date())
@@ -56,5 +55,19 @@ class Dayly_statistic(peewee.Model):
         db_table = 'dayly_statistic'
 
 
+class Feedback(peewee.Model):
+    id = peewee.AutoField()
+    chat_id = peewee.IntegerField()
+
+    mark_1 = peewee.IntegerField()
+    mark_2 = peewee.IntegerField(null=True)
+    txt = peewee.TextField(null=True)
+
+    class Meta:
+        database = db
+        db_table = 'feedbacks'
+
+
 User.create_table()
+Feedback.create_table()
 Dayly_statistic.create_table()

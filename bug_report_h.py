@@ -5,7 +5,7 @@ from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove, InlineKeyboardBu
 from functions import (get_data, publication_preview, get_n_column_keyb, send_draft, get_user_info, remove_keyboard)
 from base_h import to_main, new_update
 from database import User
-from base import *
+from base import (SEND_BUGREP_TXT, SEND_BUGREP_OTHER, keyboards, texts, config)
 '''SEND REPORT SCREEN'''
 
 

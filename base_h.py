@@ -4,8 +4,8 @@ from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove, InlineKeyboardBu
 from telegram.error import BadRequest
 from datetime import datetime, timedelta
 
-from base import *
-from blitz_h import blitz
+from base import (config, texts, keyboards)
+# from interview_h import interview
 from functions import remove_keyboard
 from database import User, Dayly_statistic
 '''Base bot's handlers (to_main, bug_report)'''
@@ -31,10 +31,10 @@ def new_update(func):
         back_5 = datetime.now() - timedelta(days=config['blitz_throughout'])
         c = Dayly_statistic.select().where(Dayly_statistic.day >= back_5).count()
 
-        if c == config['blitz_throughout'] and not user.is_interviewed:
-            user.is_interview = True
+        if not user.is_interviewed and c == config['blitz_throughout']
+            user.is_interviewed = True
             user.save()
-            # return blitz(args[0], args[1])
+            return to_interview(args[0], args[1])
 
 
         return_value = func(*args, **kwargs)
@@ -56,7 +56,8 @@ def to_main(update, context):
 @new_update
 def to_main_with_msg_del(update, context):
     update.callback_query.message.delete()
-    return to_main(update, context)
+    to_main(update, context)
+    return -1
 
 
 @new_update
@@ -73,6 +74,12 @@ def to_dashboard(update, context):
         if config['show_no_access_warning']:
             update.message.reply_text(texts['dashboard']['no_access'])
         return to_main(update, context)
+
+@new_update
+def to_interview(update, context):
+    keyb = [[InlineKeyboardButton(n, callback_data=f'interview_1_{n}') for n in range(1, config['marks_count'])]]
+    keyb.append([InlineKeyboardButton(keyboards['interview']['skip'], callback_data='to_main_c')])
+    context.bot.send_message(update._effective_chat.id, texts['interview']['mark'], reply_markup=InlineKeyboardMarkup(keyb))
 
 
 ''' LOCK SCREEN '''
@@ -91,6 +98,7 @@ def is_locked(user, now):
         return False
 
 
+@new_update
 def check_other_text(update, context):
     user = User.get(User.chat_id == update._effective_chat.id)
     now = Dayly_statistic.select().where(Dayly_statistic.day == datetime.now().date())

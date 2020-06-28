@@ -7,7 +7,7 @@ from statistics import median
 # from functions import (get_data, publication_preview, get_n_column_keyb, send_draft, get_user_info, remove_keyboard)
 from base_h import to_main, new_update
 from database import User, Dayly_statistic
-from base import *
+from base import (texts, keyboards)
 '''DASHBOARD SCREEN'''
 
 
