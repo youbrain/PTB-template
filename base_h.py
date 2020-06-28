@@ -13,8 +13,9 @@ from database import User, Dayly_statistic
 
 def new_update(func):    
     def wrapper(*args, **kwargs):
-        now = Dayly_statistic.select().where((Dayly_statistic.day == datetime.now().date()) & (Dayly_statistic.chat_id == args[0]._effective_chat.id))
         user = User.get(User.chat_id == args[0]._effective_chat.id)
+        now = Dayly_statistic.select().where((Dayly_statistic.day == datetime.now().date())
+                                       & (Dayly_statistic.chat_id == args[0]._effective_chat.id))
 
         # is bot locked
         if is_locked(user, now) and user.password:
@@ -27,37 +28,39 @@ def new_update(func):
         else: 
             Dayly_statistic.create(chat_id=args[0]._effective_chat.id).save()
 
-        # is interviewed
-        back_5 = datetime.now() - timedelta(days=config['blitz_throughout'])
-        c = Dayly_statistic.select().where(Dayly_statistic.day >= back_5).count()
+        back = datetime.now() - timedelta(days=config['blitz_throughout'])
 
-        if not user.is_interviewed and c == config['blitz_throughout']:
+        days_wright = Dayly_statistic.select().where(Dayly_statistic.day >= back).count()
+
+        # is interviewed
+        if not user.is_interviewed and days_wright == config['blitz_throughout']:
             user.is_interviewed = True
             user.save()
             return to_interview(args[0], args[1])
 
-
+        # run decorated function
         return_value = func(*args, **kwargs)
         return return_value
     return wrapper
 
 
+@new_update
 def to_main(update, context):
     '''EXITING FROM ALL HANDLERS. TO BOT'S MAIN MENU'''
     keyb = ReplyKeyboardMarkup(keyboards['main'], resize_keyboard=True, one_time_keyboard=True)
-    try:
-        update.message.reply_text(texts['to_main'], reply_markup=keyb)
-    except AttributeError:
-        # update.callback_query.message.delete()
+
+    if update.callback_query:
         context.bot.send_message(update.callback_query.message.chat.id, texts['to_main'], reply_markup=keyb)
+    else:
+        update.message.reply_text(texts['to_main'], reply_markup=keyb)
+
     return -1
 
 
-@new_update
 def to_main_with_msg_del(update, context):
+    # to main with msg delate
     update.callback_query.message.delete()
-    to_main(update, context)
-    return -1
+    return to_main(update, context)
 
 
 @new_update
@@ -67,7 +70,8 @@ def to_dashboard(update, context):
     # if user exists
     if user.exists():
         # to dashboard handler
-        update.message.reply_text(texts['dashboard']['dashboard_main'], reply_markup=ReplyKeyboardMarkup(keyboards['dashboard']['menu'], resize_keyboard=True))
+        keyb = ReplyKeyboardMarkup(keyboards['dashboard']['menu'], resize_keyboard=True)
+        update.message.reply_text(texts['dashboard']['dashboard_main'], reply_markup=keyb)
         return DASH_MAIN
     else:
         # to main menu
@@ -75,18 +79,25 @@ def to_dashboard(update, context):
             update.message.reply_text(texts['dashboard']['no_access'])
         return to_main(update, context)
 
+
 @new_update
 def to_interview(update, context):
     keyb = [[InlineKeyboardButton(n, callback_data=f'interview_1_{n}') for n in range(1, config['marks_count'])]]
     keyb.append([InlineKeyboardButton(keyboards['interview']['skip'], callback_data='to_main_c')])
+
     context.bot.send_message(update._effective_chat.id, texts['interview']['mark'], reply_markup=InlineKeyboardMarkup(keyb))
 
 
 ''' LOCK SCREEN '''
 def lock_screen(update, context):
     # context.bot.delete_message(chat_id=update._effective_chat.id, message_id=context.user_data['m_id'])
-    keyb = InlineKeyboardMarkup([[InlineKeyboardButton(keyboards['settings']['headlines']['pswd_reset'], callback_data='pswd_reset_1')]])
-    context.user_data['m_id'] = context.bot.send_message(update._effective_chat.id, texts['lock']['enter_pswd'], reply_markup=keyb).message_id
+    keyb = InlineKeyboardMarkup([
+            [InlineKeyboardButton(keyboards['settings']['headlines']['pswd_reset'], callback_data='pswd_reset_1')]
+    ])
+    msg = context.bot.send_message(update._effective_chat.id, texts['lock']['enter_pswd'], reply_markup=keyb)
+    context.user_data['m_id'] = msg.message_id
+
+
 
 def is_locked(user, now):
     if not now:
@@ -98,7 +109,6 @@ def is_locked(user, now):
         return False
 
 
-@new_update
 def check_other_text(update, context):
     user = User.get(User.chat_id == update._effective_chat.id)
     now = Dayly_statistic.select().where(Dayly_statistic.day == datetime.now().date())
@@ -121,7 +131,6 @@ def check_other_text(update, context):
             update.message.reply_text(texts['lock']['unlocked'])
             return to_main(update, context)
         else:
-            context.user_data['m_id'] = context.bot.send_message(update._effective_chat.id, texts['lock']['invalid'], reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(keyboards['settings']['headlines']['pswd_reset'], callback_data='pswd_reset_1')]])).message_id
-
+            lock_screen(update, context)
     else:
         return to_main(update, context)

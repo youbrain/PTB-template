@@ -48,6 +48,7 @@ class Dayly_statistic(peewee.Model):
     last_msg_time = peewee.TimeField(default=datetime.now().time())
 
     def save(self, *args, **kwargs):
+        # auto editing last msg time
         self.last_msg_time = datetime.now().time()
         return super(Dayly_statistic, self).save(*args, **kwargs)
 

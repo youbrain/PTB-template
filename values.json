@@ -6,7 +6,6 @@
 			"info_c": "info command",
             "user_info": "<b>Name:</b> <n>\n<b>Last name:</b> <l>\n<b>Username:</b> @<u>\nStart: <s>",
             "username_not_set": "❌",
-            "btn_txt": "btn text",
             "info": {
                 "contacts": "По коммерческим или любым другим вопросам вы можете написать разработчикам",
                 "license": "Пользовательское соглашение. Просто текст",
@@ -74,10 +73,7 @@
                 "location",
                 "audio msg",
                 "vide msg"
-            ],
-            "locktime": ["5", "10", "15", "30", "45", "60"],
-            "notify_mins": ["00", "05", "10", "15", "30", "45", "50", "55"],
-            "notify_hours": ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"]
+            ]
         },
 		"keyboards": {
             "interview": {
@@ -100,6 +96,7 @@
             "settings": {
                 "back": "back",
                 "send_location": "send location",
+                "status": ["👍", "❌"],
                 "headlines": {
                     "language": "language: ",
                     "pswd_reset": "del password",
@@ -110,8 +107,7 @@
                     "location": "now: ",
                     "location_set": "set location",
                     "lock_time": "lock time: <t> min"
-                },
-                "status": ["👍", "❌"]
+                }
 
             },
             "dashboard": {

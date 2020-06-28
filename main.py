@@ -28,18 +28,20 @@ from telegram.ext import (CommandHandler, MessageHandler, ConversationHandler, C
 import base
 from base_h import (to_main, to_dashboard, to_main_with_msg_del, check_other_text)
 
-from commands_h import (start, access)
+from commands_h import start
 from dashboard_h import statistics
 from start_h import chose_lang
 from interview_h import (inter_1, inter_2, save_marks, interview_other)
 from settings_h import (settings, set_sth, pswd, edit_pswd, set_lockation_txt, set_locatipn_geo, set_coords)
 from bug_report_h import (bug_report, bugrep_text, report_other, rem_part_report, send_report)
-from info_h import (info_c, to_info_screen, support, contacts, license, donate)
+from info_h import (info_c, to_info_screen, support, contacts, license, donate, access)
 
 
 def btn_handler(name, func):
     return MessageHandler(Filters.regex(f"^({name})$"), func)
 
+def empty(a, b):
+    1
 
 def main():
     '''ENTRY POINT'''
@@ -121,19 +123,21 @@ def main():
                                     btn_handler(base.keyboards['info_creen'][2][0], license),
                                     btn_handler(base.keyboards['info_creen'][2][1], donate),
                                     btn_handler(base.keyboards['info_creen'][3][0], to_main),
-                                    CallbackQueryHandler(to_info_screen, pattern='to_info_screen')]
+                                    CallbackQueryHandler(to_info_screen, pattern='to_info_screen'),
+                                    MessageHandler(Filters.text, empty)]
         },
         fallbacks=[],
         per_message=False
     )
 
+    conversations = (settings_h, dash_h, bug_report_h, info_h, interview_h, start_h)
+
     # commands
     dp.add_handler(CommandHandler("info", info_c))
 
     # Conversation handlers
-
-    conversations = (settings_h, dash_h, bug_report_h, info_h, interview_h, start_h)
-    map(dp.add_handler, conversations)
+    for handler in conversations:
+        dp.add_handler(handler)
 
     dp.add_handler(CallbackQueryHandler(to_main_with_msg_del, pattern="to_main_c"))
     dp.add_handler(CallbackQueryHandler(set_sth, pattern="set_"))

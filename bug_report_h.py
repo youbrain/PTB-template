@@ -11,9 +11,11 @@ from base import (SEND_BUGREP_TXT, SEND_BUGREP_OTHER, keyboards, texts, config)
 
 @new_update
 def bug_report(update, context):
-    # cancle report btn
-    keyb = InlineKeyboardMarkup([[InlineKeyboardButton(keyboards['bug_rep']['cancel'], callback_data='bug_rep_cancel')]])
     update.callback_query.answer()
+    # cancle report btn
+    keyb = InlineKeyboardMarkup([
+        [InlineKeyboardButton(keyboards['bug_rep']['cancel'], callback_data='bug_rep_cancel')]
+    ])
     # removing main menu markup
     remove_keyboard(update, context)
     update.callback_query.message.reply_text(texts['bug_report']['txt'], reply_markup=keyb)
@@ -22,11 +24,10 @@ def bug_report(update, context):
 
 @new_update
 def bugrep_text(update, context):
+    main_t = update.message.text
     # creating places to temporary save report parts 
     context.user_data['drafts'] = {'bug_rep': {'main_text': update.message.text}}
     context.user_data['drafts']['bug_rep'].update({'other': []})
-
-    main_t = update.message.text
 
     # checking for max preview len (in chars) 
     if not len(main_t) < config['preview_chars']:
@@ -35,13 +36,14 @@ def bugrep_text(update, context):
     txt = f"<b>{texts['bug_report']['prefix']}</b><i>{main_t}</i>\n"
 
     # send & cancel report btns
-    keyb = [[InlineKeyboardButton(keyboards['bug_rep']['send'], callback_data='bug_rep_send'),
-             InlineKeyboardButton(keyboards['bug_rep']['cancel'], callback_data='bug_rep_cancel')]]
+    keyb = InlineKeyboardMarkup([
+            [InlineKeyboardButton(keyboards['bug_rep']['send'], callback_data='bug_rep_send'),
+             InlineKeyboardButton(keyboards['bug_rep']['cancel'], callback_data='bug_rep_cancel')]
+    ])
 
-    m_id = update.message.reply_text(txt + texts['bug_report']['postfix'], reply_markup=InlineKeyboardMarkup(keyb)).message_id
+    m_id = update.message.reply_text(txt + texts['bug_report']['postfix'], reply_markup=keyb).message_id
     # saving last msg id for removing on next step
     context.user_data['drafts']['bug_rep'].update({'last_msg_id': m_id})
-
     return SEND_BUGREP_OTHER
 
 
@@ -65,7 +67,7 @@ def report_other(update, context):
     keyb = [(keyboards['bug_rep']["del_part"].replace('<n>', str(n)), f"bug_rep_delp_{n}")
             for n in range(1, len(context.user_data['drafts']['bug_rep']['other']) + 1)]
     #creating 3 column keyboard from data
-    keyb = get_n_column_keyb(keyb, 3)
+    keyb = get_n_column_keyb(keyb, config['report_columns'])
     # send & cancel report btns
     keyb.append([InlineKeyboardButton(keyboards['bug_rep']['send'], callback_data='bug_rep_send'),
                  InlineKeyboardButton(keyboards['bug_rep']['cancel'], callback_data='bug_rep_cancel')])
@@ -98,7 +100,7 @@ def rem_part_report(update, context):
     keyb = [(keyboards['bug_rep']["del_part"].replace('<n>', str(n)), f"bug_rep_delp_{n}")
             for n in range(1, len(context.user_data['drafts']['bug_rep']['other']) + 1)]
     #creating 3 column keyboard from data
-    keyb = get_n_column_keyb(keyb, 3)
+    keyb = get_n_column_keyb(keyb, config['report_columns'])
     # send & cancel report btns
     keyb.append([InlineKeyboardButton(keyboards['bug_rep']['send'], callback_data='bug_rep_send'),
                  InlineKeyboardButton(keyboards['bug_rep']['cancel'], callback_data='bug_rep_cancel')])
