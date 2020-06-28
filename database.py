@@ -11,23 +11,22 @@ db = peewee.SqliteDatabase(config['db_file'])
 
 class User(peewee.Model):
     id = peewee.AutoField()
-
     chat_id = peewee.IntegerField()
+
     first_name = peewee.CharField()
     last_name = peewee.CharField(null=True)
     username = peewee.CharField(null=True, unique=True)
-
     start_time = peewee.DateTimeField(default=datetime.now())
 
     is_oper = peewee.BooleanField(default=False)
     is_admin = peewee.BooleanField(default=False)
     is_banned = peewee.BooleanField(default=False)
     is_owner = peewee.BooleanField(default=False)
-
     is_interviewed = peewee.BooleanField(default=False)
     use_stickers = peewee.BooleanField(default=False)
 
-    coordinates = peewee.CharField()
+    coordinates = peewee.CharField(null=True)
+    coord_place = peewee.CharField(null=True)
 
     lock_time = peewee.IntegerField(default=5)
     password = peewee.CharField(null=True)

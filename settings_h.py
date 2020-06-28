@@ -30,16 +30,7 @@ def get_settings_keyb(user):
 		t_p = None
 
 	if user.coordinates:
-		geolocator = Nominatim(user_agent="bot")
-		address = geolocator.reverse(user.coordinates, language='en').raw['address']
-
-		if address.get('village'):
-			address['city'] = address['village']
-		elif address.get('town'):
-			address['city'] = address['town']
-		print(address)
-		b = f"{address['city']}, {address['country']}"
-		c = InlineKeyboardButton(keyboards['settings']['headlines']['location']+b, callback_data='set_location')# .address
+		c = InlineKeyboardButton(keyboards['settings']['headlines']['location']+user.coord_place, callback_data='set_location')# .address
 	else:
 		c = InlineKeyboardButton(keyboards['settings']['headlines']['location_set'], callback_data='set_location')
 	'''
@@ -209,7 +200,8 @@ def set_lockation_txt(update, context):
 	btns = []
 
 	for l in all_l:
-		btns.append([InlineKeyboardButton(f"{l.address}, {l.country}", callback_data=f"set_coords_{l.lat}_{l.lng}")])
+		s = f"{l.address}, {l.country}"
+		btns.append([InlineKeyboardButton(s, callback_data=f"set_coords_{l.lat}_{l.lng}_{s}")])
 	if all_l:
 		update.message.reply_text(texts['settings']['locations'], reply_markup=InlineKeyboardMarkup(btns))
 	else:
@@ -230,6 +222,7 @@ def set_locatipn_geo(update, context):
 	context.bot.delete_message(chat_id=update._effective_chat.id, message_id=context.user_data['m_id'])
 	remove_keyboard(update, context)
 	update.message.reply_text(txt, reply_markup=InlineKeyboardMarkup(keyb))
+	return SETTINGS_MAIN
 
 
 def set_coords(update, context):
@@ -237,14 +230,12 @@ def set_coords(update, context):
 
 	user = User.get(User.chat_id == update._effective_chat.id)
 	user.coordinates = f"{data[2]}, {data[3]}"
+	user.coord_place = data[4]
 	user.save()
-
 
 	keyb = get_settings_keyb(user)
 	keyb.append([InlineKeyboardButton(keyboards['settings']['back'], callback_data='to_main')])
-	txt = texts['settings']['txt']
 
-	# context.bot.delete_message(chat_id=update._effective_chat.id, message_id=update.message.message_id)
-	# context.bot.delete_message(chat_id=update._effective_chat.id, message_id=context.user_data['m_id'])
-	update.callback_query.edit_message_text(txt, reply_markup=InlineKeyboardMarkup(keyb))
+	update.callback_query.edit_message_text(texts['settings']['txt'], reply_markup=InlineKeyboardMarkup(keyb))
+	return SETTINGS_MAIN
 

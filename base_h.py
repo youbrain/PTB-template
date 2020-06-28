@@ -78,8 +78,8 @@ def to_dashboard(update, context):
 ''' LOCK SCREEN '''
 def lock_screen(update, context):
     # context.bot.delete_message(chat_id=update._effective_chat.id, message_id=context.user_data['m_id'])
-    context.user_data['m_id'] = update.message.reply_text(texts['lock']['enter_pswd'], reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(keyboards['settings']['headlines']['pswd_reset'], callback_data='pswd_reset_1')]])).message_id
-
+    keyb = InlineKeyboardMarkup([[InlineKeyboardButton(keyboards['settings']['headlines']['pswd_reset'], callback_data='pswd_reset_1')]])
+    context.user_data['m_id'] = context.bot.send_message(update._effective_chat.id, texts['lock']['enter_pswd'], reply_markup=keyb).message_id
 
 def is_locked(user, now):
     if not now:
