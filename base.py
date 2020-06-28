@@ -5,7 +5,7 @@ import logging
 '''Reading values.json file, setting config, texts, keyboards, inline vars. (logger)'''
 
 
-file = open('config.json')
+file = open('config.json', encoding='utf-8')
 config = json.loads(file.read())
 
 with open(config['texts_file'], encoding='utf-8') as file:
@@ -40,3 +40,6 @@ INTERVIEW, INTERVIEW_MORE = range(2)
 
 # start
 START_IS_CORRECT = range(1)
+
+# info
+INFO_MAIN = range(1)

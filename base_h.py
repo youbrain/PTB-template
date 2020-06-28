@@ -44,7 +44,7 @@ def new_update(func):
 
 def to_main(update, context):
     '''EXITING FROM ALL HANDLERS. TO BOT'S MAIN MENU'''
-    keyb = ReplyKeyboardMarkup(keyboards['main'], resize_keyboard=True)
+    keyb = ReplyKeyboardMarkup(keyboards['main'], resize_keyboard=True, one_time_keyboard=True)
     try:
         update.message.reply_text(texts['to_main'], reply_markup=keyb)
     except AttributeError:

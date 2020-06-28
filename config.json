@@ -14,5 +14,17 @@
     "marks_count": 10,
 	"key_location": "uargb99",
     "avaliable_langesges": ["ru", "eng", "ua", "fr", "de"],
-    "chose_lang_columns": 4
+    "chose_lang_columns": 4,
+    "contact": ["Антон", "https://t.me/Webrspcom"],
+    "donate": [
+        ["1$", "https://google.com/search?q=1"],
+        ["3$", "https://google.com/search?q=3"],
+        ["5$", "https://google.com/search?q=5"],
+        ["10$", "https://google.com/search?q=10"],
+        ["15$", "https://google.com/search?q=15"],
+        ["25$", "https://google.com/search?q=25"],
+        ["50$", "https://google.com/search?q=50"],
+        ["100$", "https://google.com/search?q=100"],
+        ["500$", "https://google.com/search?q=500"]
+    ]
 }

@@ -20,9 +20,6 @@ STRUCTURE:
 
 Developer: Alexander Machek [@youbrain]
 Repository: https://github.com/s404s/bot_ecosystem/tree/dev/organaizer
-
-TODO:
-    - all dev tasks here
 '''
 from telegram import ParseMode
 from telegram.ext import (Updater, Filters, Defaults)
@@ -31,14 +28,17 @@ from telegram.ext import (CommandHandler, MessageHandler, ConversationHandler, C
 import base
 from base_h import (to_main, to_dashboard, to_main_with_msg_del, check_other_text)
 
-from commands_h import (info, start, access)
+from commands_h import (start, access)
 from dashboard_h import statistics
 from start_h import chose_lang
 from interview_h import (inter_1, inter_2, save_marks, interview_other)
 from settings_h import (settings, set_sth, pswd, edit_pswd, set_lockation_txt, set_locatipn_geo, set_coords)
 from bug_report_h import (bug_report, bugrep_text, report_other, rem_part_report, send_report)
+from info_h import (info_c, to_info_screen, support, contacts, license, donate)
 
-from test_handlers import button
+
+def btn_handler(name, func):
+    return MessageHandler(Filters.regex(f"^({name})$"), func)
 
 
 def main():
@@ -51,12 +51,12 @@ def main():
         entry_points=[CallbackQueryHandler(bug_report, pattern="bug_report")],
         states={
             base.SEND_BUGREP_TXT:   [CallbackQueryHandler(to_main_with_msg_del, pattern="bug_rep_cancel"), # cancel report
-                                MessageHandler(Filters.text, bugrep_text)], # get a report text
+                                     MessageHandler(Filters.text, bugrep_text)], # get a report text
 
             base.SEND_BUGREP_OTHER: [CallbackQueryHandler(to_main_with_msg_del, pattern="bug_rep_cancel"), # cancel report
-                                CallbackQueryHandler(rem_part_report, pattern="bug_rep_delp_"), # remove part of report
-                                CallbackQueryHandler(send_report, pattern="bug_rep_send"), # send report
-                                MessageHandler(Filters.all, report_other)]
+                                     CallbackQueryHandler(rem_part_report, pattern="bug_rep_delp_"), # remove part of report
+                                     CallbackQueryHandler(send_report, pattern="bug_rep_send"), # send report
+                                     MessageHandler(Filters.all, report_other)]
         },
         fallbacks=[],
         per_message=False
@@ -65,24 +65,26 @@ def main():
     dash_h = ConversationHandler( # DASHBOARD 
         entry_points=[CommandHandler("dashboard", to_dashboard)],
         states={
-            base.DASH_MAIN:   [MessageHandler(Filters.regex(f"^({base.keyboards['dashboard']['menu'][0][0]})$"), statistics)], # statistics btn
+            base.DASH_MAIN:   [btn_handler(base.keyboards['dashboard']['menu'][0][0], statistics)], # statistics btn
 
-            base.DASH_STAT:   [MessageHandler(Filters.regex(f"^({base.keyboards['dashboard']['statistics'][0][0][0]})$"), to_dashboard)] # back
+            base.DASH_STAT:   [btn_handler(base.keyboards['dashboard']['statistics'][0][0][0], to_dashboard)] # back
         },
         fallbacks=[],
         per_message=False
     )
 
-    settings_h = ConversationHandler( # SETTINGS
-        entry_points=[MessageHandler(Filters.regex(f"^({base.keyboards['main'][0][0]})$"), settings)],
+    settings_h = ConversationHandler( # SETTINGS btn
+        entry_points=[btn_handler(base.keyboards['main'][0][0], settings)],
         states={
             base.SETTINGS_MAIN: [CallbackQueryHandler(to_main_with_msg_del, pattern="to_main"),
-                            CallbackQueryHandler(set_sth, pattern="set_"),
-                            CallbackQueryHandler(pswd, pattern="pswd_")],
+                                 CallbackQueryHandler(set_sth, pattern="set_"),
+                                 CallbackQueryHandler(pswd, pattern="pswd_")],
+
             base.SET_PSWD:      [MessageHandler(Filters.text, edit_pswd)],
+
             base.SET_LOCATION:  [MessageHandler(Filters.text, set_lockation_txt),
-                            MessageHandler(Filters.location, set_locatipn_geo),
-                            CallbackQueryHandler(set_coords, pattern="set_coords_")]
+                                 MessageHandler(Filters.location, set_locatipn_geo),
+                                 CallbackQueryHandler(set_coords, pattern="set_coords_")]
         },
         fallbacks=[],
         per_message=False
@@ -92,11 +94,11 @@ def main():
         entry_points=[CallbackQueryHandler(inter_1, pattern="interview_1_")],
         states={
             base.INTERVIEW:       [CallbackQueryHandler(to_main_with_msg_del, pattern="to_main_c"),
-                              CallbackQueryHandler(inter_2, pattern="interview_2_"),
-                              CallbackQueryHandler(save_marks, pattern="interview_save")],
+                                   CallbackQueryHandler(inter_2, pattern="interview_2_"),
+                                   CallbackQueryHandler(save_marks, pattern="interview_save")],
 
             base.INTERVIEW_MORE:  [CallbackQueryHandler(save_marks, pattern="interview_save"),
-                              MessageHandler(Filters.text, interview_other)]
+                                   MessageHandler(Filters.text, interview_other)]
         },
         fallbacks=[],
         per_message=False
@@ -105,23 +107,33 @@ def main():
     start_h = ConversationHandler( # START 
         entry_points=[CommandHandler('start', start)],
         states={
-            base.START_IS_CORRECT:       [MessageHandler(Filters.regex(f"^({base.keyboards['start']['cor_lang']})$"), to_main),
-                                          MessageHandler(Filters.regex(f"^({base.keyboards['start']['not_cor_lang']})$"), chose_lang)]
+            base.START_IS_CORRECT:       [btn_handler(base.keyboards['start']['cor_lang'], to_main),
+                                          btn_handler(base.keyboards['start']['not_cor_lang'], chose_lang)]
+        },
+        fallbacks=[],
+        per_message=False
+    )
+
+    info_h = ConversationHandler( # INFO btn 
+        entry_points=[btn_handler(base.keyboards['main'][0][1], to_info_screen)],
+        states={
+            base.INFO_MAIN:        [btn_handler(base.keyboards['info_creen'][1][1], contacts),
+                                    btn_handler(base.keyboards['info_creen'][2][0], license),
+                                    btn_handler(base.keyboards['info_creen'][2][1], donate),
+                                    btn_handler(base.keyboards['info_creen'][3][0], to_main),
+                                    CallbackQueryHandler(to_info_screen, pattern='to_info_screen')]
         },
         fallbacks=[],
         per_message=False
     )
 
     # commands
-    dp.add_handler(CommandHandler("info", info))
+    dp.add_handler(CommandHandler("info", info_c))
 
-    # Cconversations
-    dp.add_handler(settings_h)
+    # Conversation handlers
 
-    dp.add_handler(dash_h)
-    dp.add_handler(bug_report_h)
-    dp.add_handler(interview_h)
-    dp.add_handler(start_h)
+    conversations = (settings_h, dash_h, bug_report_h, info_h, interview_h, start_h)
+    map(dp.add_handler, conversations)
 
     dp.add_handler(CallbackQueryHandler(to_main_with_msg_del, pattern="to_main_c"))
     dp.add_handler(CallbackQueryHandler(set_sth, pattern="set_"))
@@ -129,6 +141,7 @@ def main():
     dp.add_handler(CallbackQueryHandler(pswd, pattern="pswd_reset_1"))
     dp.add_handler(CallbackQueryHandler(to_main_with_msg_del, pattern=''))
     dp.add_handler(MessageHandler(Filters.text, check_other_text))
+
     # errors
     # dp.add_error_handler(error)
 

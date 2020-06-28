@@ -58,7 +58,7 @@ def settings(update, context):
 	keyb = get_settings_keyb(user)
 	keyb.append([InlineKeyboardButton(keyboards['settings']['back'], callback_data='to_main')])
 
-	remove_keyboard(update, context)
+	# remove_keyboard(update, context)
 	context.user_data['m_id'] = update.message.reply_text(texts['settings']['txt'], reply_markup=InlineKeyboardMarkup(keyb)).message_id
 	return SETTINGS_MAIN
 
