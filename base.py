@@ -37,3 +37,6 @@ LOCK_PSWD = range(1)
 
 # interview
 INTERVIEW, INTERVIEW_MORE = range(2)
+
+# start
+START_IS_CORRECT = range(1)

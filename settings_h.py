@@ -9,40 +9,44 @@ from geocoder import geonames
 from functions import (remove_keyboard, get_n_column_keyb)
 from base_h import to_main, new_update
 from database import User
+from start_h import chose_lang
 from base import (SETTINGS_MAIN, SET_PSWD, SET_LOCATION, texts, keyboards)
 ''' settings '''
 
 
 def get_settings_keyb(user):
+	notify = InlineKeyboardButton(keyboards['settings']['headlines']['notify']+str(user.notify_time)[:5], callback_data='set_notify')
+	lang = InlineKeyboardButton(keyboards['settings']['headlines']['language']+user.language, callback_data='set_language')
+
 	if user.use_stickers:
-		s = InlineKeyboardButton(keyboards['settings']['headlines']['stickers']+keyboards['settings']['status'][0], callback_data='set_stickers_0')
+		stickers = InlineKeyboardButton(keyboards['settings']['headlines']['stickers']+keyboards['settings']['status'][0], callback_data='set_stickers_0')
 	else:
-		s = InlineKeyboardButton(keyboards['settings']['headlines']['stickers']+keyboards['settings']['status'][1], callback_data='set_stickers_1')
-	
-	n = InlineKeyboardButton(keyboards['settings']['headlines']['notify']+str(user.notify_time)[:5], callback_data='set_notify')
+		stickers = InlineKeyboardButton(keyboards['settings']['headlines']['stickers']+keyboards['settings']['status'][1], callback_data='set_stickers_1')
 
 	if user.password:
-		r = InlineKeyboardButton(keyboards['settings']['headlines']['pswd_reset'], callback_data='pswd_reset')
-		p = InlineKeyboardButton(keyboards['settings']['headlines']['change_password'], callback_data='pswd_set')
-		t_p = InlineKeyboardButton(keyboards['settings']['headlines']['lock_time'].replace('<t>', str(user.lock_time)), callback_data='set_locktime')
+		pswd_reset = InlineKeyboardButton(keyboards['settings']['headlines']['pswd_reset'], callback_data='pswd_reset')
+		pswd_change = InlineKeyboardButton(keyboards['settings']['headlines']['change_password'], callback_data='pswd_set')
+		lock_time = InlineKeyboardButton(keyboards['settings']['headlines']['lock_time'].replace('<t>', str(user.lock_time)), callback_data='set_locktime')
 	else:
-		p = InlineKeyboardButton(keyboards['settings']['headlines']['set_password'], callback_data='pswd_set')
-		t_p = None
+		pswd_change = InlineKeyboardButton(keyboards['settings']['headlines']['set_password'], callback_data='pswd_set')
+		lock_time = None
 
 	if user.coordinates:
-		c = InlineKeyboardButton(keyboards['settings']['headlines']['location']+user.coord_place, callback_data='set_location')# .address
+		location = InlineKeyboardButton(keyboards['settings']['headlines']['location']+user.coord_place, callback_data='set_location')# .address
 	else:
-		c = InlineKeyboardButton(keyboards['settings']['headlines']['location_set'], callback_data='set_location')
+		location = InlineKeyboardButton(keyboards['settings']['headlines']['location_set'], callback_data='set_location')
+
+
 	'''
 	if user.:
 		s = texts['settings'][''][0]
 	else:
 		s = texts['settings'][''][1]
 	'''
-	if t_p:
-		keyb = [[s], [n], [p, r], [t_p], [c]]
+	if lock_time:
+		keyb = [[stickers], [notify], [lang], [pswd_change, pswd_reset], [lock_time], [location]]
 	else:
-		keyb = [[s], [n], [p], [c]]
+		keyb = [[stickers], [notify], [lang], [location], [pswd_change]]
 
 	return keyb
 
@@ -137,6 +141,26 @@ def set_sth(update, context):
 
 		context.user_data['m_id'] = context.bot.send_message(update._effective_chat.id, texts['settings']['location'], reply_markup=btn).message_id
 		return SET_LOCATION
+
+
+	elif data[1] == 'lang':
+		user = User.get(User.chat_id == update._effective_chat.id)
+		user.language = data[2]
+		user.save()
+
+		update.callback_query.edit_message_text(texts['start']['lang_set'])
+		
+		if len(data) == 3:
+			return to_main(update, context)
+		else:
+			keyb = get_settings_keyb(user)
+			keyb.append([InlineKeyboardButton(keyboards['settings']['back'], callback_data='to_main')])
+			txt = texts['settings']['txt']
+
+			update.callback_query.edit_message_text(txt, reply_markup=InlineKeyboardMarkup(keyb))
+
+	elif data[1] == 'language':
+		chose_lang(update, context)
 
 
 # @new_update

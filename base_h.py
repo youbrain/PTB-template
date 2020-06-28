@@ -31,7 +31,7 @@ def new_update(func):
         back_5 = datetime.now() - timedelta(days=config['blitz_throughout'])
         c = Dayly_statistic.select().where(Dayly_statistic.day >= back_5).count()
 
-        if not user.is_interviewed and c == config['blitz_throughout']
+        if not user.is_interviewed and c == config['blitz_throughout']:
             user.is_interviewed = True
             user.save()
             return to_interview(args[0], args[1])

@@ -10,6 +10,11 @@
             "info": {
                 "404": "user not found"
             },
+            "start": {
+                "lang": "<lang>\nis this languge is correct?",
+                "chose_one_of": "chose the correct one from the list bellow",
+                "lang_set": "chosen language set, u can change it in setting"
+            },
             "interview": {
                 "mark": "Насколько полезен и интересен бот для Вас?\nОцените, пожалуйста, от 1 до 10.\n(Где 10 максимально полезен/интересен)",
                 "mark_2": "Насколько удобен и прост в использовании бот для Вас?",
@@ -75,6 +80,10 @@
                 "skip": "skip",
                 "send": "send"
             },
+            "start": {
+                "cor_lang": "yes",
+                "not_cor_lang": "no"
+            },
             "info": {
                 "access_ban": "ban",
                 "access_unban": "unban",
@@ -87,6 +96,7 @@
                 "back": "back",
                 "send_location": "send location",
                 "headlines": {
+                    "language": "language: ",
                     "pswd_reset": "del password",
                     "stickers": "stickers: ",
                     "notify": "notificaton: ",

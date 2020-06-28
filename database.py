@@ -16,6 +16,7 @@ class User(peewee.Model):
     first_name = peewee.CharField()
     last_name = peewee.CharField(null=True)
     username = peewee.CharField(null=True, unique=True)
+    language = peewee.CharField(null=True)
     start_time = peewee.DateTimeField(default=datetime.now())
 
     is_oper = peewee.BooleanField(default=False)

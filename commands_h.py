@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove, InlineKeyboardButton, InlineKeyboardMarkup)
 
-from base import (config, texts, keyboards)
-from functions import get_user_info, get_n_column_keyb
+from base import (config, texts, keyboards, START_IS_CORRECT)
+from functions import (get_user_info, get_n_column_keyb)
 from database import User
 
 from base_h import to_main, new_update
@@ -18,15 +18,19 @@ def start(update, context):
         user = User.create(chat_id=update.message.chat.id,
                     first_name=update.message.chat.first_name,
                     last_name=update.message.chat.last_name,
-                    username=update.message.chat.username)
+                    username=update.message.chat.username,
+                    language=update.effective_user.language_code)
 
         if str(update.message.chat.id) == config['owner_id']:
             user.is_owner = True
-
         user.save()
 
-        update.message.reply_text(texts['welcome'])
-        to_main(update, context)
+        keyb = ReplyKeyboardMarkup([[keyboards['start']['cor_lang'], keyboards['start']['not_cor_lang']]], resize_keyboard=True)
+
+        # update.message.reply_text(texts['welcome'])
+        # to_main(update, context)
+        update.message.reply_text(texts['start']['lang'].replace('<lang>', update.effective_user.language_code), reply_markup=keyb)
+        return START_IS_CORRECT
     else:
         to_main(update, context)
 

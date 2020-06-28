@@ -4,7 +4,7 @@
 	"texts_file":  "values.json",
     "preview_chars": 50,
     "show_no_access_warning": true,
-    "blitz_throughout": 1,
+    "blitz_throughout": 5,
     "notify_time_set_columns": 4,
     "locktime_set_columns": 3,
     "min_pswd_lenght": 4,
@@ -12,5 +12,7 @@
     "owner_id": "383253401",
     "maxRows_location": 5,
     "marks_count": 10,
-	"key_location": "uargb99"
+	"key_location": "uargb99",
+    "avaliable_langesges": ["ru", "eng", "ua", "fr", "de"],
+    "chose_lang_columns": 4
 }

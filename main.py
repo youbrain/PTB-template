@@ -33,6 +33,7 @@ from base_h import (to_main, to_dashboard, to_main_with_msg_del, check_other_tex
 
 from commands_h import (info, start, access)
 from dashboard_h import statistics
+from start_h import chose_lang
 from interview_h import (inter_1, inter_2, save_marks, interview_other)
 from settings_h import (settings, set_sth, pswd, edit_pswd, set_lockation_txt, set_locatipn_geo, set_coords)
 from bug_report_h import (bug_report, bugrep_text, report_other, rem_part_report, send_report)
@@ -101,17 +102,29 @@ def main():
         per_message=False
     )
 
+    start_h = ConversationHandler( # START 
+        entry_points=[CommandHandler('start', start)],
+        states={
+            base.START_IS_CORRECT:       [MessageHandler(Filters.regex(f"^({base.keyboards['start']['cor_lang']})$"), to_main),
+                                          MessageHandler(Filters.regex(f"^({base.keyboards['start']['not_cor_lang']})$"), chose_lang)]
+        },
+        fallbacks=[],
+        per_message=False
+    )
+
     # commands
-    dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("info", info))
 
     # Cconversations
     dp.add_handler(settings_h)
+
     dp.add_handler(dash_h)
     dp.add_handler(bug_report_h)
     dp.add_handler(interview_h)
+    dp.add_handler(start_h)
 
     dp.add_handler(CallbackQueryHandler(to_main_with_msg_del, pattern="to_main_c"))
+    dp.add_handler(CallbackQueryHandler(set_sth, pattern="set_"))
     dp.add_handler(CallbackQueryHandler(access, pattern="access_"))
     dp.add_handler(CallbackQueryHandler(pswd, pattern="pswd_reset_1"))
     dp.add_handler(CallbackQueryHandler(to_main_with_msg_del, pattern=''))
