@@ -27,7 +27,7 @@ class User(peewee.Model):
     is_interviewed = peewee.BooleanField(default=False)
     use_stickers = peewee.BooleanField(default=False)
 
-    coordinates = peewee.CharField()# deleate default
+    coordinates = peewee.CharField()
 
     lock_time = peewee.IntegerField(default=5)
     password = peewee.CharField(null=True)

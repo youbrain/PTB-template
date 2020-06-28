@@ -22,10 +22,11 @@ def get_settings_keyb(user):
 	n = InlineKeyboardButton(keyboards['settings']['headlines']['notify']+str(user.notify_time)[:5], callback_data='set_notify')
 
 	if user.password:
-		p = InlineKeyboardButton(keyboards['settings']['headlines']['change_password'], callback_data='password_set')
+		r = InlineKeyboardButton(keyboards['settings']['headlines']['pswd_reset'], callback_data='pswd_reset')
+		p = InlineKeyboardButton(keyboards['settings']['headlines']['change_password'], callback_data='pswd_set')
 		t_p = InlineKeyboardButton(keyboards['settings']['headlines']['lock_time'].replace('<t>', str(user.lock_time)), callback_data='set_locktime')
 	else:
-		p = InlineKeyboardButton(keyboards['settings']['headlines']['set_password'], callback_data='password_set')
+		p = InlineKeyboardButton(keyboards['settings']['headlines']['set_password'], callback_data='pswd_set')
 		t_p = None
 
 	if user.coordinates:
@@ -48,7 +49,7 @@ def get_settings_keyb(user):
 		s = texts['settings'][''][1]
 	'''
 	if t_p:
-		keyb = [[s], [n], [p], [t_p], [c]]
+		keyb = [[s], [n], [p, r], [t_p], [c]]
 	else:
 		keyb = [[s], [n], [p], [c]]
 
@@ -147,11 +148,28 @@ def set_sth(update, context):
 		return SET_LOCATION
 
 
-@new_update
-def pswd_set(update, context):
-	idi = update.callback_query.edit_message_text(texts['settings']['set_pswd']).message_id
-	context.user_data['m_id'] = idi
-	return SET_PSWD
+# @new_update
+def pswd(update, context):
+	data = update.callback_query.data.split('_')
+	if data[1] == 'set':
+		idi = update.callback_query.edit_message_text(texts['settings']['set_pswd']).message_id
+		context.user_data['m_id'] = idi
+		return SET_PSWD
+
+	elif data[1] == 'reset':
+		user = User.get(User.chat_id == update._effective_chat.id)
+		user.password = ''
+		user.save()
+
+		keyb = get_settings_keyb(user)
+		keyb.append([InlineKeyboardButton(keyboards['settings']['back'], callback_data='to_main')])
+		txt = texts['settings']['txt']
+
+		if len(data) == 3:
+			return to_main(update, context)
+		else:
+			update.callback_query.edit_message_text(txt, reply_markup=InlineKeyboardMarkup(keyb))
+
 
 
 @new_update

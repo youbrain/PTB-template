@@ -33,7 +33,7 @@ from base_h import (to_main, to_dashboard, to_main_with_msg_del, check_other_tex
 
 from commands_h import (info, start, access)
 from dashboard_h import statistics
-from settings_h import (settings, set_sth, pswd_set, edit_pswd, set_lockation_txt, set_locatipn_geo, set_coords)
+from settings_h import (settings, set_sth, pswd, edit_pswd, set_lockation_txt, set_locatipn_geo, set_coords)
 from bug_report_h import (bug_report, bugrep_text, report_other, rem_part_report, send_report)
 
 from test_handlers import button
@@ -76,7 +76,7 @@ def main():
         states={
             SETTINGS_MAIN: [CallbackQueryHandler(to_main_with_msg_del, pattern="to_main"),
                             CallbackQueryHandler(set_sth, pattern="set_"),
-                            CallbackQueryHandler(pswd_set, pattern="password_set")],
+                            CallbackQueryHandler(pswd, pattern="pswd_")],
             SET_PSWD:      [MessageHandler(Filters.text, edit_pswd)],
             SET_LOCATION:  [MessageHandler(Filters.text, set_lockation_txt),
                             MessageHandler(Filters.location, set_locatipn_geo),
@@ -96,6 +96,8 @@ def main():
     dp.add_handler(settings_h)
 
     dp.add_handler(CallbackQueryHandler(access, pattern="access_"))
+    dp.add_handler(CallbackQueryHandler(pswd, pattern="pswd_reset_1"))
+    dp.add_handler(CallbackQueryHandler(to_main_with_msg_del, pattern=''))
     dp.add_handler(MessageHandler(Filters.text, check_other_text))
     # errors
     # dp.add_error_handler(error)

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove, InlineKeyboardButton, InlineKeyboardMarkup)
+from telegram.error import BadRequest
 from datetime import datetime, timedelta
 
 from base import *
@@ -76,8 +77,8 @@ def to_dashboard(update, context):
 
 ''' LOCK SCREEN '''
 def lock_screen(update, context):
-    remove_keyboard(update, context)
-    update.message.reply_text(texts['lock']['enter_pswd'])
+    # context.bot.delete_message(chat_id=update._effective_chat.id, message_id=context.user_data['m_id'])
+    context.user_data['m_id'] = update.message.reply_text(texts['lock']['enter_pswd'], reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(keyboards['settings']['headlines']['pswd_reset'], callback_data='pswd_reset_1')]])).message_id
 
 
 def is_locked(user, now):
@@ -95,6 +96,10 @@ def check_other_text(update, context):
     now = Dayly_statistic.select().where(Dayly_statistic.day == datetime.now().date())
 
     if is_locked(user, now) and user.password:
+
+        if context.user_data.get('m_id'):
+            context.bot.delete_message(chat_id=update._effective_chat.id, message_id=context.user_data['m_id'])
+
         # if password correct
         if user.password == update.message.text:
             now = Dayly_statistic.select().where(Dayly_statistic.day == datetime.now().date())
@@ -108,7 +113,7 @@ def check_other_text(update, context):
             update.message.reply_text(texts['lock']['unlocked'])
             return to_main(update, context)
         else:
-            lock_screen(update, context)
-            update.message.reply_text(texts['lock']['invalid'])
+            context.user_data['m_id'] = context.bot.send_message(update._effective_chat.id, texts['lock']['invalid'], reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(keyboards['settings']['headlines']['pswd_reset'], callback_data='pswd_reset_1')]])).message_id
+
     else:
         return to_main(update, context)

@@ -79,6 +79,7 @@
                 "back": "back",
                 "send_location": "send location",
                 "headlines": {
+                    "pswd_reset": "del password",
                     "stickers": "stickers: ",
                     "notify": "notificaton: ",
                     "change_password": "change password",
