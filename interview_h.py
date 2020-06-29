@@ -3,7 +3,7 @@
 from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove, InlineKeyboardButton, InlineKeyboardMarkup)
 
 from base_h import (to_main, new_update)
-from functions import remove_keyboard
+from functions import (remove_keyboard, get_n_column_keyb)
 from database import (Feedback, User)
 from base import (INTERVIEW, INTERVIEW_MORE, texts, keyboards, config)
 
@@ -13,7 +13,8 @@ def inter_1(update, context):
 	context.user_data['1_mark'] = d[2]
 
 	remove_keyboard(update, context)
-	keyb = [[InlineKeyboardButton(n, callback_data=f'interview_2_{n}') for n in range(1, config['marks_count'])]]
+	data = [[str(n), f'interview_2_{n}'] for n in range(1, config['marks_count']+1)]
+	keyb = get_n_column_keyb(data, 5)
 	keyb.append([InlineKeyboardButton(keyboards['interview']['send'], callback_data='interview_save')])
 
 	msg = update.callback_query.edit_message_text(texts['interview']['mark_2'], reply_markup=InlineKeyboardMarkup(keyb))

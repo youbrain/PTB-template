@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 
 from base import (config, texts, keyboards)
 # from interview_h import interview
-from functions import remove_keyboard
+from functions import (remove_keyboard, get_n_column_keyb)
 from database import User, Dayly_statistic
 '''Base bot's handlers (to_main, bug_report)'''
 
@@ -23,7 +23,8 @@ def new_update(func):
 
         # is bot locked
         if is_locked(user, now) and user.password:
-            return lock_screen(args[0], args[1])
+            lock_screen(args[0], args[1])
+            return -1
 
         # editing msg today count & last msg time
         if now:
@@ -37,7 +38,7 @@ def new_update(func):
         days_wright = Dayly_statistic.select().where(Dayly_statistic.day >= back).count()
 
         # is interviewed
-        if not user.is_interviewed and days_wright == config['blitz_throughout']:
+        if not user.is_interviewed:# and days_wright == config['blitz_throughout']:
             user.is_interviewed = True
             user.save()
             return to_interview(args[0], args[1])
@@ -86,8 +87,10 @@ def to_dashboard(update, context):
 
 @new_update
 def to_interview(update, context):
-    keyb = [[InlineKeyboardButton(n, callback_data=f'interview_1_{n}') for n in range(1, config['marks_count'])]]
+    data = [[str(n), f'interview_1_{n}'] for n in range(1, config['marks_count']+1)]
+    keyb = get_n_column_keyb(data, 5)
     keyb.append([InlineKeyboardButton(keyboards['interview']['skip'], callback_data='to_main_c')])
+    # print(keyb)
 
     context.bot.send_message(update._effective_chat.id, texts['interview']['mark'], reply_markup=InlineKeyboardMarkup(keyb))
 
@@ -115,16 +118,19 @@ def is_locked(user, now):
 
 def check_other_text(update, context):
     user = User.get(User.chat_id == update._effective_chat.id)
-    now = Dayly_statistic.select().where(Dayly_statistic.day == datetime.now().date())
+    now = Dayly_statistic.select().where((Dayly_statistic.day == datetime.now().date())
+                                   & (Dayly_statistic.chat_id == update._effective_chat.id))
 
     if is_locked(user, now) and user.password:
 
         if context.user_data.get('m_id'):
-            context.bot.delete_message(chat_id=update._effective_chat.id, message_id=context.user_data['m_id'])
+            try:
+                context.bot.delete_message(chat_id=update._effective_chat.id, message_id=context.user_data['m_id'])
+            except BadRequest:
+                pass
 
         # if password correct
         if user.password == update.message.text:
-            now = Dayly_statistic.select().where(Dayly_statistic.day == datetime.now().date())
             # last msg time edit
             if now:
                 now[0].msgs_count += 1

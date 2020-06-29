@@ -4,7 +4,8 @@ from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove, InlineKeyboardBu
 from telegram.error import BadRequest
 from geopy.geocoders import Nominatim
 from datetime import datetime
-from geocoder import geonames
+from geopy.geocoders import Nominatim
+from geocoder import geonames, google
 
 from functions import (remove_keyboard, get_n_column_keyb)
 from base_h import to_main, new_update
@@ -53,7 +54,11 @@ def settings(update, context):
 	keyb = get_settings_keyb(user)
 	keyb.append([InlineKeyboardButton(keyboards['settings']['back'], callback_data='to_main')])
 
-	msg = update.message.reply_text(texts['settings']['txt'], reply_markup=InlineKeyboardMarkup(keyb))
+	if update.callback_query:
+		msg = update.callback_query.edit_message_text(texts['settings']['txt'], reply_markup=InlineKeyboardMarkup(keyb))
+	else:
+		msg = update.message.reply_text(texts['settings']['txt'], reply_markup=InlineKeyboardMarkup(keyb))
+
 	context.user_data['m_id'] = msg.message_id
 	return SETTINGS_MAIN
 
@@ -82,9 +87,10 @@ def set_sth(update, context):
 	elif data[1] == 'notify' and len(data) == 2:
 		hours = config['notify_hours']
 		data = [[f"{texts['settings']['hour']}{num}", f"set_notify_hour_{num}"] for num in hours]
-		keyb = InlineKeyboardMarkup(get_n_column_keyb(data, config['notify_time_set_columns']))
+		keyb = get_n_column_keyb(data, config['notify_time_set_columns'])
+		keyb.append([InlineKeyboardButton(keyboards['settings']['back'], callback_data='to_settings')])
 
-		update.callback_query.edit_message_text(texts['settings']['set_notify_hour'], reply_markup=keyb)
+		update.callback_query.edit_message_text(texts['settings']['set_notify_hour'], reply_markup=InlineKeyboardMarkup(keyb))
 
 	# notify time
 	elif data[1] == 'notify':
@@ -96,8 +102,9 @@ def set_sth(update, context):
 				time = data[3]+':'+m
 				d.append((texts['settings']['minute']+time, 'set_notify_'+time))
 
-			keyb = InlineKeyboardMarkup(get_n_column_keyb(d, config['notify_time_set_columns']))
-			update.callback_query.edit_message_text(texts['settings']['set_notify_min'], reply_markup=keyb)
+			keyb = get_n_column_keyb(d, config['notify_time_set_columns'])
+			keyb.append([InlineKeyboardButton(keyboards['settings']['back'], callback_data='set_notify')])
+			update.callback_query.edit_message_text(texts['settings']['set_notify_min'], reply_markup=InlineKeyboardMarkup(keyb))
 		else:
 			h, m = data[2].split(':')
 			user = User.get(User.chat_id == update._effective_chat.id)
@@ -133,8 +140,12 @@ def set_sth(update, context):
 		btn = ReplyKeyboardMarkup([
 				[KeyboardButton(keyboards['settings']['send_location'], request_location=True)]
 			], resize_keyboard=True)
-
-		context.bot.delete_message(chat_id=update._effective_chat.id, message_id=context.user_data['m_id'])
+		try:
+			context.bot.delete_message(chat_id=update._effective_chat.id, message_id=context.user_data['m_id'])
+		except BadRequest:
+			pass
+		except KeyError:
+			pass
 		msg = context.bot.send_message(update._effective_chat.id, texts['settings']['location'], reply_markup=btn)
 		context.user_data['m_id'] = msg.message_id
 
@@ -162,6 +173,7 @@ def set_sth(update, context):
 
 
 def pswd(update, context):
+	update.callback_query.answer()
 	data = update.callback_query.data.split('_')
 	if data[1] == 'set':
 		idi = update.callback_query.edit_message_text(texts['settings']['set_pswd']).message_id
@@ -221,9 +233,11 @@ def set_lockation_txt(update, context):
 	all_l = geonames(update.message.text,  maxRows=config['maxRows_location'], key=config['key_location'])
 	btns = []
 
+	context.user_data['coord_place'] = {}
 	for l in all_l:
+		# g = google([l.lat, l.lng], method='reverse')
 		city_str =f"{l.address}, {l.country}"
-		context.user_data['coord_place'] = city_str
+		context.user_data['coord_place'].update({f"{l.lat}_{l.lng}": city_str})
 		btns.append([InlineKeyboardButton(city_str, callback_data=f"set_coords_{l.lat}_{l.lng}")])
 
 	if all_l:
@@ -235,8 +249,13 @@ def set_lockation_txt(update, context):
 
 @new_update
 def set_locatipn_geo(update, context):
+	geolocator = Nominatim(user_agent="city_bot")
+	coords = f"{update.message.location['latitude']}, {update.message.location['longitude']}"
+	city_str = geolocator.reverse(coords).address
+
 	user = User.get(User.chat_id == update._effective_chat.id)
-	user.coordinates = f"{update.message.location['latitude']}, {update.message.location['longitude']}"
+	user.coord_place = city_str
+	user.coordinates = coords
 	user.save()
 
 	keyb = get_settings_keyb(user)
@@ -256,7 +275,7 @@ def set_coords(update, context):
 
 	user = User.get(User.chat_id == update._effective_chat.id)
 	user.coordinates = f"{data[2]}, {data[3]}"
-	user.coord_place = context.user_data['coord_place']
+	user.coord_place = context.user_data['coord_place'][data[2]+"_"+data[3]]
 	user.save()
 
 	keyb = get_settings_keyb(user)

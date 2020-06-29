@@ -80,7 +80,8 @@ def main():
         states={
             base.SETTINGS_MAIN: [CallbackQueryHandler(to_main_with_msg_del, pattern="to_main"),
                                  CallbackQueryHandler(set_sth, pattern="set_"),
-                                 CallbackQueryHandler(pswd, pattern="pswd_")],
+                                 CallbackQueryHandler(pswd, pattern="pswd_"),
+                                 CallbackQueryHandler(settings, pattern="to_settings")],
 
             base.SET_PSWD:      [MessageHandler(Filters.text, edit_pswd)],
 
