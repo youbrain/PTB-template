@@ -4,6 +4,7 @@
 			"welcome": "hello",
 			"to_main": "main screen",
 			"info_c": "info command",
+            "is_banned": "You was banned by an administrator",
             "user_info": "<b>Name:</b> <n>\n<b>Last name:</b> <l>\n<b>Username:</b> @<u>\nStart: <s>",
             "username_not_set": "❌",
             "info": {

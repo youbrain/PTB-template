@@ -17,6 +17,10 @@ def new_update(func):
         now = Dayly_statistic.select().where((Dayly_statistic.day == datetime.now().date())
                                        & (Dayly_statistic.chat_id == args[0]._effective_chat.id))
 
+        if user.is_banned:
+            args[1].bot.send_message(args[0]._effective_chat.id, texts['is_banned'])
+            return
+
         # is bot locked
         if is_locked(user, now) and user.password:
             return lock_screen(args[0], args[1])
