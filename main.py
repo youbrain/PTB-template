@@ -124,8 +124,14 @@ def main():
                                     btn_handler(base.keyboards['info_creen'][2][0], license),
                                     btn_handler(base.keyboards['info_creen'][2][1], donate),
                                     btn_handler(base.keyboards['info_creen'][3][0], to_main),
+                                    btn_handler(base.keyboards['info_creen'][1][0], support),
                                     CallbackQueryHandler(to_info_screen, pattern='to_info_screen'),
-                                    MessageHandler(Filters.text, empty)]
+                                    MessageHandler(Filters.text, empty)],
+
+            base.INFO_REPORT:       [CallbackQueryHandler(to_info_screen, pattern="bug_rep_cancel"), # cancel report
+                                     CallbackQueryHandler(rem_part_report, pattern="bug_rep_delp_"), # remove part of report
+                                     CallbackQueryHandler(send_report, pattern="bug_rep_send"), # send report
+                                     MessageHandler(Filters.all, report_other)]
         },
         fallbacks=[],
         per_message=False

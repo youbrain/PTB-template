@@ -74,7 +74,8 @@ def report_other(update, context):
 
     m_id = update.message.reply_text(txt, reply_markup=InlineKeyboardMarkup(keyb)).message_id
     # delating last msg from bot
-    context.bot.delete_message(chat_id=update.message.chat_id, message_id=context.user_data['drafts']['bug_rep']['last_msg_id'])
+    if context.user_data['drafts']['bug_rep'].get('last_msg_id'):
+        context.bot.delete_message(chat_id=update.message.chat_id, message_id=context.user_data['drafts']['bug_rep']['last_msg_id'])
     # saving new last msg id
     context.user_data['drafts']['bug_rep']['last_msg_id'] = m_id
 

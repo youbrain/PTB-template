@@ -42,4 +42,4 @@ INTERVIEW, INTERVIEW_MORE = range(2)
 START_IS_CORRECT = range(1)
 
 # info
-INFO_MAIN = range(1)
+INFO_MAIN, INFO_REPORT = range(2)

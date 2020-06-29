@@ -103,7 +103,7 @@ def set_sth(update, context):
 				d.append((texts['settings']['minute']+time, 'set_notify_'+time))
 
 			keyb = get_n_column_keyb(d, config['notify_time_set_columns'])
-			keyb.append([InlineKeyboardButton(keyboards['settings']['back'], callback_data='set_notify')])
+			keyb.append([InlineKeyboardButton(keyboards['settings']['back'], callback_data='to_settings')])
 			update.callback_query.edit_message_text(texts['settings']['set_notify_min'], reply_markup=InlineKeyboardMarkup(keyb))
 		else:
 			h, m = data[2].split(':')
