@@ -29,9 +29,6 @@ SEND_BUGREP_TXT, SEND_BUGREP_OTHER = range(2)
 # dashboard
 DASH_MAIN, DASH_STAT = range(2)
 
-# settings
-SETTINGS_MAIN, SET_PSWD, SET_LOCATION = range(3)
-
 # lock
 LOCK_PSWD = range(1)
 
@@ -41,5 +38,6 @@ INTERVIEW, INTERVIEW_MORE = range(2)
 # start
 START_IS_CORRECT = range(1)
 
-# info
-INFO_MAIN, INFO_REPORT = range(2)
+
+
+MAIN_MENU, INFO_MAIN, INFO_REPORT, SETTINGS_MAIN, SET_PSWD, SET_LOCATION, USEFULL_BOTS = range(7)

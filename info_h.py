@@ -5,7 +5,7 @@ from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove, InlineKeyboardBu
 from base_h import (to_main, new_update)
 from functions import (remove_keyboard, get_n_column_keyb, get_user_info)
 from database import User
-from base import (INFO_REPORT, INFO_MAIN, texts, keyboards, config)
+from base import (INFO_REPORT, USEFULL_BOTS, INFO_MAIN, texts, keyboards, config)
 
 
 
@@ -132,3 +132,7 @@ def donate(update, context):
 
 	keyb.append([back])
 	update.message.reply_text(texts['info']['donate'], reply_markup=InlineKeyboardMarkup(keyb))
+
+
+def usefull_bots(update, context):
+	return USEFULL_BOTS

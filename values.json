@@ -27,7 +27,7 @@
                 "oper": "chat_id: <c>\n1 question: <1s>\n2 question: <2s>\ntext: <txt>"
             },
             "bug_report": {
-                "oper_new": "<b>new bug report:</b> ",
+                "oper_new": "<b>new report:</b> ",
                 "prefix": "Report content:\n",
                 "txt": "Здесь вы можете сообщить об ошибке, прикрепить скрин (фото или видео), или прислать пожелание, что вы хотели бы улучшить в данном продукте\nДля начала отправьте тект",
                 "u_can_otrher": "you can send sth other too",

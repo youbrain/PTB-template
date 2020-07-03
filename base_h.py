@@ -4,7 +4,7 @@ from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove, InlineKeyboardBu
 from telegram.error import BadRequest
 from datetime import datetime, timedelta
 
-from base import (config, texts, keyboards)
+from base import (config, texts, keyboards, MAIN_MENU)
 # from interview_h import interview
 from functions import (remove_keyboard, get_n_column_keyb)
 from database import User, Dayly_statistic
@@ -59,7 +59,7 @@ def to_main(update, context):
     else:
         update.message.reply_text(texts['to_main'], reply_markup=keyb)
 
-    return -1
+    return MAIN_MENU
 
 
 def to_main_with_msg_del(update, context):

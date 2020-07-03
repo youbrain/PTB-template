@@ -34,7 +34,7 @@ from start_h import chose_lang
 from interview_h import (inter_1, inter_2, save_marks, interview_other)
 from settings_h import (settings, set_sth, pswd, edit_pswd, set_lockation_txt, set_locatipn_geo, set_coords)
 from bug_report_h import (bug_report, bugrep_text, report_other, rem_part_report, send_report)
-from info_h import (info_c, to_info_screen, support, contacts, license, donate, access)
+from info_h import (info_c, to_info_screen, support, contacts, license, donate, access, usefull_bots)
 
 
 def btn_handler(name, func):
@@ -49,6 +49,47 @@ def main():
     dp = updater.dispatcher
 
     # Conversation Handlers
+
+    main_h = ConversationHandler( # BUG REPORT 
+        entry_points=[MessageHandler(Filters.all, to_main)],
+        states={
+            base.MAIN_MENU:         [btn_handler(base.keyboards['main'][0][0], settings),
+                                     btn_handler(base.keyboards['main'][0][1], to_info_screen)],
+            # --------------------------------------------------------------------------------------------- INFO
+            base.INFO_MAIN:        [btn_handler(base.keyboards['info_creen'][1][1], contacts),
+                                    btn_handler(base.keyboards['info_creen'][2][0], license),
+                                    btn_handler(base.keyboards['info_creen'][0][0], usefull_bots),
+                                    btn_handler(base.keyboards['info_creen'][2][1], donate),
+                                    btn_handler(base.keyboards['info_creen'][3][0], to_main),
+                                    btn_handler(base.keyboards['info_creen'][1][0], support),
+                                    CallbackQueryHandler(to_info_screen, pattern='to_info_screen'),
+                                    MessageHandler(Filters.text, empty)],
+
+            base.INFO_REPORT:       [CallbackQueryHandler(to_info_screen, pattern="bug_rep_cancel"), # cancel report
+                                     CallbackQueryHandler(rem_part_report, pattern="bug_rep_delp_"), # remove part of report
+                                     CallbackQueryHandler(send_report, pattern="bug_rep_send"), # send report
+                                     MessageHandler(Filters.all, report_other)],
+
+            # base.USEFULL_BOTS:      [CallbackQueryHandler(usefull_previous, pattern="usefull_previous"),
+            #                          CallbackQueryHandler(usefull_previous, pattern="usefull_previous"),
+            #                          CallbackQueryHandler(usefull_previous, pattern="usefull_previous")],
+            # -----------------------------------------------------------------------------------------------------
+            # --------------------------------------------------------------------------------------------- SETTINGS
+            base.SETTINGS_MAIN: [CallbackQueryHandler(to_main_with_msg_del, pattern="to_main"),
+                                 CallbackQueryHandler(set_sth, pattern="set_"),
+                                 CallbackQueryHandler(pswd, pattern="pswd_"),
+                                 CallbackQueryHandler(settings, pattern="to_settings")],
+
+            base.SET_PSWD:      [MessageHandler(Filters.text, edit_pswd)],
+
+            base.SET_LOCATION:  [MessageHandler(Filters.text, set_lockation_txt),
+                                 MessageHandler(Filters.location, set_locatipn_geo),
+                                 CallbackQueryHandler(set_coords, pattern="set_coords_")]
+            # ----------------------------------------------------------------------------------------------------------
+        },
+        fallbacks=[],
+        per_message=False
+    )
     bug_report_h = ConversationHandler( # BUG REPORT 
         entry_points=[CallbackQueryHandler(bug_report, pattern="bug_report")],
         states={
@@ -70,24 +111,6 @@ def main():
             base.DASH_MAIN:   [btn_handler(base.keyboards['dashboard']['menu'][0][0], statistics)], # statistics btn
 
             base.DASH_STAT:   [btn_handler(base.keyboards['dashboard']['statistics'][0][0][0], to_dashboard)] # back
-        },
-        fallbacks=[],
-        per_message=False
-    )
-
-    settings_h = ConversationHandler( # SETTINGS btn
-        entry_points=[btn_handler(base.keyboards['main'][0][0], settings)],
-        states={
-            base.SETTINGS_MAIN: [CallbackQueryHandler(to_main_with_msg_del, pattern="to_main"),
-                                 CallbackQueryHandler(set_sth, pattern="set_"),
-                                 CallbackQueryHandler(pswd, pattern="pswd_"),
-                                 CallbackQueryHandler(settings, pattern="to_settings")],
-
-            base.SET_PSWD:      [MessageHandler(Filters.text, edit_pswd)],
-
-            base.SET_LOCATION:  [MessageHandler(Filters.text, set_lockation_txt),
-                                 MessageHandler(Filters.location, set_locatipn_geo),
-                                 CallbackQueryHandler(set_coords, pattern="set_coords_")]
         },
         fallbacks=[],
         per_message=False
@@ -117,27 +140,7 @@ def main():
         per_message=False
     )
 
-    info_h = ConversationHandler( # INFO btn 
-        entry_points=[btn_handler(base.keyboards['main'][0][1], to_info_screen)],
-        states={
-            base.INFO_MAIN:        [btn_handler(base.keyboards['info_creen'][1][1], contacts),
-                                    btn_handler(base.keyboards['info_creen'][2][0], license),
-                                    btn_handler(base.keyboards['info_creen'][2][1], donate),
-                                    btn_handler(base.keyboards['info_creen'][3][0], to_main),
-                                    btn_handler(base.keyboards['info_creen'][1][0], support),
-                                    CallbackQueryHandler(to_info_screen, pattern='to_info_screen'),
-                                    MessageHandler(Filters.text, empty)],
-
-            base.INFO_REPORT:       [CallbackQueryHandler(to_info_screen, pattern="bug_rep_cancel"), # cancel report
-                                     CallbackQueryHandler(rem_part_report, pattern="bug_rep_delp_"), # remove part of report
-                                     CallbackQueryHandler(send_report, pattern="bug_rep_send"), # send report
-                                     MessageHandler(Filters.all, report_other)]
-        },
-        fallbacks=[],
-        per_message=False
-    )
-
-    conversations = (settings_h, dash_h, bug_report_h, info_h, interview_h, start_h)
+    conversations = (dash_h, bug_report_h, interview_h, start_h)
 
     # commands
     dp.add_handler(CommandHandler("info", info_c))
@@ -146,6 +149,7 @@ def main():
     for handler in conversations:
         dp.add_handler(handler)
 
+    dp.add_handler(main_h)
     dp.add_handler(CallbackQueryHandler(to_main_with_msg_del, pattern="to_main_c"))
     dp.add_handler(CallbackQueryHandler(set_sth, pattern="set_"))
     dp.add_handler(CallbackQueryHandler(access, pattern="access_"))
