@@ -54,7 +54,8 @@ def main():
         entry_points=[MessageHandler(Filters.all, to_main)],
         states={
             base.MAIN_MENU:         [btn_handler(base.keyboards['main'][0][0], settings),
-                                     btn_handler(base.keyboards['main'][0][1], to_info_screen)],
+                                     btn_handler(base.keyboards['main'][0][1], to_info_screen),
+                                     MessageHandler(Filters.text, check_other_text)],
             # --------------------------------------------------------------------------------------------- INFO
             base.INFO_MAIN:        [btn_handler(base.keyboards['info_creen'][1][1], contacts),
                                     btn_handler(base.keyboards['info_creen'][2][0], license),
@@ -155,7 +156,7 @@ def main():
     dp.add_handler(CallbackQueryHandler(access, pattern="access_"))
     dp.add_handler(CallbackQueryHandler(pswd, pattern="pswd_reset_1"))
     dp.add_handler(CallbackQueryHandler(to_main_with_msg_del, pattern=''))
-    dp.add_handler(MessageHandler(Filters.text, check_other_text))
+    # dp.add_handler()
 
     # errors
     # dp.add_error_handler(error)

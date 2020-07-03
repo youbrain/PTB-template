@@ -24,7 +24,7 @@ def new_update(func):
         # is bot locked
         if is_locked(user, now) and user.password:
             lock_screen(args[0], args[1])
-            return -1
+            return MAIN_MENU
 
         # editing msg today count & last msg time
         if now:
