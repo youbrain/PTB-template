@@ -1,67 +1,11 @@
 {
-	"ru": {
-		"texts": {
-			"welcome": "hello",
-			"to_main": "main screen",
-			"info_c": "info command",
-            "is_banned": "You was banned by an administrator",
-            "user_info": "<b>Name:</b> <n>\n<b>Last name:</b> <l>\n<b>Username:</b> @<u>\nStart: <s>",
-            "username_not_set": "❌",
-            "info": {
-                "contacts": "По коммерческим или любым другим вопросам вы можете написать разработчикам",
-                "license": "Пользовательское соглашение. Просто текст",
-                "donate": "Создавать идеальные и полезные продукты для людей - наша миссия. Мы благодарны за каждую чашечку кофе, которой вы делитесь с разработчиками. Поддержите проект, отправьте любую комфортную сумму для вас. Нас уже поддержало 9456 человек",
-                "404": "user not found",
-                "menu": "info menu"
-            },
-            "start": {
-                "lang": "<lang>\nis this languge is correct?",
-                "chose_one_of": "chose the correct one from the list bellow",
-                "lang_set": "chosen language set, u can change it in setting"
-            },
-            "interview": {
-                "mark": "Насколько полезен и интересен бот для Вас?\nОцените, пожалуйста, от 1 до 10.\n(Где 10 максимально полезен/интересен)",
-                "mark_2": "Насколько удобен и прост в использовании бот для Вас?",
-                "to_do": "Пожалуйста, напишите, чтобы Вы хотели улучшить, изменить, добавить для своего комфорта",
-                "saved": "Спасибо за фидбек",
-                "oper": "chat_id: <c>\n1 question: <1s>\n2 question: <2s>\ntext: <txt>"
-            },
-            "bug_report": {
-                "oper_new": "<b>new report:</b> ",
-                "prefix": "Report content:\n",
-                "txt": "Здесь вы можете сообщить об ошибке, прикрепить скрин (фото или видео), или прислать пожелание, что вы хотели бы улучшить в данном продукте\nДля начала отправьте тект",
-                "u_can_otrher": "you can send sth other too",
-                "postfix": "Sth else?",
-                "thnx": "Спасибо, ваш отзыв важен для нас. Это поможет нам стать еще лучше"
-            },
-            "lock": {
-                "enter_pswd": "bot is locked enter a password please",
-                "unlocked": "unlocked",
-                "invalid": "enter correct pswd"
-            },
-            "dashboard": {
-                "dashboard_main": "you in dashboard now",
-                "no_access": "you have no access to the dash board",
-                "statistics": {
-                    "txt": "all users count: <a_c>\nactive users today: <m_d>\nmidle msg to bot count per day: <dd>"
-                }
-            },
-            "settings": {
-                "locations": "chose one from the list below",
-                "other_loc": "nothing found, try again",
-                "txt": "in settings now...",
-                "set_notify_hour": "chose hour for notificatons",
-                "set_notify_min": "chose minute",
-                "hour": "🕰",
-                "minute": "⏱",
-                "locktime_mins": "",
-                "locktime": "chose locktime for bot",
-                "set_pswd": "send bot's password (no spaces, min lenght 4 cahrs)",
-                "pswd_no_min_lenght": "no min lenght",
-                "pswd_no_spaces": "password cant contain spaces",
-                "pswd_set": "password set",
-                "location": "you can send location by btn or send a city name"
-            },
+    "texts": {
+        "global": {
+            "start": "приветствую",
+            "main_menu": "вы в главном меню"
+        },
+        "dash": {
+            "main": "вы в панеле управления",
             "parts_names": [
                 "Photo: ",
                 "File: ", 
@@ -75,65 +19,9 @@
                 "audio msg",
                 "vide msg"
             ]
-        },
-		"keyboards": {
-            "interview": {
-                "skip": "skip",
-                "send": "send"
-            },
-            "start": {
-                "cor_lang": "yes",
-                "not_cor_lang": "no"
-            },
-            "info": {
-                "back": "назад",
-                "access_ban": "ban",
-                "access_unban": "unban",
-                "access_oper": "to opers",
-                "access_unoper": "unoper",
-                "access_admin": "to admins",
-                "access_unadmin": "unadmin"
-            },
-            "settings": {
-                "back": "back",
-                "send_location": "send location",
-                "status": ["👍", "❌"],
-                "headlines": {
-                    "language": "language: ",
-                    "pswd_reset": "del password",
-                    "stickers": "stickers: ",
-                    "notify": "notificaton: ",
-                    "change_password": "change password",
-                    "set_password": "set password",
-                    "location": "now: ",
-                    "location_set": "set location",
-                    "lock_time": "lock time: <t> min"
-                }
+        }
+    },
+    "keyboards": {
 
-            },
-            "dashboard": {
-                "statistics": [
-                    [["back"]]
-                ],
-                "menu": [
-                    ["statistics"]
-                ]
-            },
-            "bug_rep": {
-                "del_part": "❌ №<n>",
-                "to": "I found bug!",
-                "cancel": "cancel",
-                "send": "send"
-            },
-			"main": [
-				["settings", "info"]
-			],
-            "info_creen": [
-                ["Полезные боты"],
-                ["Support", "Контакты"],
-                ["Соглашение", "Donate"],
-                ["Главное меню"]
-            ]
-		}
-	}
+    }
 }

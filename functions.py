@@ -1,9 +1,36 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove, InlineKeyboardButton, InlineKeyboardMarkup)
+from telegram.error import BadRequest
+from datetime import datetime, timedelta
 
-from database import *
-from base import *
+from base import (config, texts, keyboards)
+from functions import (remove_keyboard, get_n_column_keyb)
+from database import User, Dayly_statistic
+
+
+# main decorator
+def new_update(func):    
+    def wrapper(*args, **kwargs):
+        user = User.get(User.chat_id == args[0]._effective_chat.id)
+        now = Dayly_statistic.select().where((Dayly_statistic.day == datetime.now().date())
+                                       & (Dayly_statistic.chat_id == args[0]._effective_chat.id))
+
+        if user.is_banned:
+            # args[1].bot.send_message(args[0]._effective_chat.id, texts['banned'])
+            return
+
+        # editing msg today count & last msg time
+        if now:
+            now[0].msgs_count += 1
+            now[0].save()
+        else: 
+            Dayly_statistic.create(chat_id=args[0]._effective_chat.id).save()
+
+        # run decorated function
+        return_value = func(*args, **kwargs)
+        return return_value
+    return wrapper
 
 
 def get_n_column_keyb(data, n):
@@ -38,8 +65,17 @@ def get_user_info(chat_id):
         if user.username:
             username = user.username
         else:
-            username = texts['username_not_set']
-        return texts['user_info'].replace('<n>', user.first_name).replace('<l>', user.last_name).replace('<s>', str(user.start_time)).replace('<u>', username)
+            username = texts['dash']['not_set']
+
+        if user.last_name:
+            last_name = user.last_name
+        else:
+            last_name = texts['dash']['not_set']
+
+        texts = texts['dash']['user_info'].replace('<n>', user.first_name)
+        texts = texts.replace('<l>', last_name).replace('<s>', str(user.start_time))
+        texts = texts.replace('<u>', username)
+        return texts
     else: 
         return False
 
@@ -49,7 +85,7 @@ def remove_keyboard(update, context):
     context.bot.delete_message(chat_id=update._effective_chat.id, message_id=m_id)
 
 
-''' working with content from user '''
+# reciving data
 
 
 def send_draft(context, draft, to_chat_id):
@@ -175,10 +211,10 @@ def get_data(update, context, key, **kwargs):
 
 def publication_preview(arr):
     # creating preview text by parsing user_data
-    t = texts['parts_names']
+    t = texts['dash']['parts_names']
     out_text = ''
     i = 1
-    count = config['preview_chars']
+    count = config['lengths']['preview_chars']
     for content in arr:
         # text
         if content['type'] == 'text':
