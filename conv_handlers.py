@@ -1,16 +1,29 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from telegram.ext import Filters, ConversationHandler
 
-
-# DASHBOARD 
-dash_h = ConversationHandler( 
-    entry_points=[CommandHandler("dashboard", to_dashboard)],
+'''
+from telegram.ext import (Updater, Filters, Defaults)
+from telegram.ext import (CommandHandler, MessageHandler,
+                          ConversationHandler, CallbackQueryHandler)
+                          
+r_link = ConversationHandler(
+    entry_points=[CallbackQueryHandler(my_liks, pattern='my_liks')],
     states={
-        0:   [btn_handler(base.keyboards['dashboard']['menu'][0][0], statistics)], # statistics btn
+        15: [CallbackQueryHandler(wlink, pattern='wlink_'),
+             CallbackQueryHandler(
+            set_ref_link, pattern='setlinkto_'),
+            CallbackQueryHandler(birshiset, pattern='setbirshi'),
+            CallbackQueryHandler(profile, pattern='back_to_profile')],
 
-        1:   [btn_handler(base.keyboards['dashboard']['statistics'][0][0][0], to_dashboard)] # back
+        5: [CallbackQueryHandler(get_wallet, pattern='get_wallet_'),
+            CallbackQueryHandler(profile, pattern='back_to_profile'),
+            MessageHandler(Filters.text, get_link_w)],
+
+        base.SET_L: [CallbackQueryHandler(profile, pattern='back_to_profile'),
+                     MessageHandler(Filters.text, s_l)]
     },
-    fallbacks=[],
-    per_message=False
+    fallbacks=[CallbackQueryHandler(to_main_with_msg_del, pattern=''),
+               MessageHandler(Filters.text, to_main)],
 )
+
+'''

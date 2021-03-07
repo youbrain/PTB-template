@@ -1,8 +1,5 @@
 {
-	"bot_token": "1011862852:AAH1UzqTbIlCS025zQ8_Hwlgjl79wmRt6XI",
-	"db_file":  "database",
-	"texts_file":  "values.json",
-    "lengths": {
-        "preview_chars": 15
-    }
+    "ignore_errs": [
+        "part of traceback to ignore"
+    ]
 }

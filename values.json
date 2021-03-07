@@ -1,27 +1,12 @@
 {
     "texts": {
-        "global": {
-            "start": "приветствую",
-            "main_menu": "вы в главном меню"
-        },
-        "dash": {
-            "main": "вы в панеле управления",
-            "parts_names": [
-                "Photo: ",
-                "File: ", 
-                "text: ",
-                "video: ",
-                "ask",
-                "audio: ",
-                "sticker: ",
-                "contact: ",
-                "location",
-                "audio msg",
-                "vide msg"
-            ]
-        }
+        "you_were_banned": "You were banned",
+        "to_main": "main screen",
+        "help_h": "help info"
     },
     "keyboards": {
-
+        "to_main": [
+            ["show help"]
+        ]
     }
 }
